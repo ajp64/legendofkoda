@@ -1,44 +1,58 @@
 import kaboom from "kaboom"
 
-kaboom();
+kaboom({
+    background: [0, 0, 0],
+    width: mapWidth,
+    height: mapLength,
+  });
 
 loadPedit("wall", "sprites/wall.pedit");
-loadPedit("player", "sprites/player.pedit");
-loadPedit("snakePile", "sprites/snakePile.pedit");
 loadPedit("background", "sprites/background.pedit");
+loadPedit("playerLeft", "sprites/playerLeft.pedit");
+loadPedit("playerRight", "sprites/playerRight.pedit");
 
-const background = add([
-  sprite("background"),
-  scale(100),
-  pos(0,0)
-]);
+
+const mapWidth = 1000;
+const mapLength  = 1000;
+const mapBlock = 60;
 
 const level = addLevel([
-  "xxxxxxxxxxxxxxxx",
-  "x              x",
-  "x              x",
-  "x              x",
-  "xxxxxxxxxxxxxxxx",
+  "xxxxxxxxxxxxx",
+  "x           x",
+  "x   x       x",
+  "x   x       x",
+  "x   x       x",
+  "x   xxx     x",
+  "x     x     x",
+  "x   xxx     x",
+  "x   x       x",
+  "x   x x xx  x",
+  "x        x  x",
+  "x           x",
+  "xxxxxxxxxxxxx",
 ],{
-  width: 40,
-  height: 40,
-  "x": ()=>[sprite("wall"), area(), solid()]
+  width: mapBlock,
+  height: mapBlock,
+  "x": ()=>[sprite("wall"), area(), solid(), "wall"]
 });
 
-const moveSpeed = 100
+const moveSpeed = 200
 
 const player = add([
-  sprite("snakePile"),
+  sprite("playerRight"),
   scale(1),
-  pos(40,40)
+  pos(60,60),
+  area(),
+  solid(),
 ]);
-
 
 
 onKeyDown("right", ()=>{
+  player.use(sprite("playerRight")) 
   player.move(moveSpeed, 0)
 })
 onKeyDown("left", ()=>{
+  player.use(sprite("playerLeft")) 
   player.move(-moveSpeed, 0)
 })
 onKeyDown("down", ()=>{

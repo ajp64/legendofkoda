@@ -11,3 +11,5 @@ A document to make notes and reflections about the development of my game
  - Experimented with Kaboom.js and replit. Made some simple sprites and created a map, added some movement functionality for moving a player around.
 
 ### 29/12/2021
+
+ - Created a basic map with walls and player sprite. Player has movement that changes based on direction, walls and player are solid so can't move through each other. 

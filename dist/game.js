@@ -2747,37 +2747,51 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   }, "default");
 
   // code/main.js
-  Es();
-  loadPedit("wall", "sprites/wall.pedit");
-  loadPedit("player", "sprites/player.pedit");
-  loadPedit("snakePile", "sprites/snakePile.pedit");
-  loadPedit("background", "sprites/background.pedit");
-  var background = add([
-    sprite("background"),
-    scale(100),
-    pos(0, 0)
-  ]);
-  var level = addLevel([
-    "xxxxxxxxxxxxxxxx",
-    "x              x",
-    "x              x",
-    "x              x",
-    "xxxxxxxxxxxxxxxx"
-  ], {
-    width: 40,
-    height: 40,
-    "x": () => [sprite("wall"), area(), solid()]
+  Es({
+    background: [0, 0, 0],
+    width: mapWidth,
+    height: mapLength
   });
-  var moveSpeed = 100;
+  loadPedit("wall", "sprites/wall.pedit");
+  loadPedit("background", "sprites/background.pedit");
+  loadPedit("playerLeft", "sprites/playerLeft.pedit");
+  loadPedit("playerRight", "sprites/playerRight.pedit");
+  var mapWidth = 1e3;
+  var mapLength = 1e3;
+  var mapBlock = 60;
+  var level = addLevel([
+    "xxxxxxxxxxxxx",
+    "x           x",
+    "x   x       x",
+    "x   x       x",
+    "x   x       x",
+    "x   xxx     x",
+    "x     x     x",
+    "x   xxx     x",
+    "x   x       x",
+    "x   x x xx  x",
+    "x        x  x",
+    "x           x",
+    "xxxxxxxxxxxxx"
+  ], {
+    width: mapBlock,
+    height: mapBlock,
+    "x": () => [sprite("wall"), area(), solid(), "wall"]
+  });
+  var moveSpeed = 200;
   var player = add([
-    sprite("snakePile"),
+    sprite("playerRight"),
     scale(1),
-    pos(40, 40)
+    pos(60, 60),
+    area(),
+    solid()
   ]);
   onKeyDown("right", () => {
+    player.use(sprite("playerRight"));
     player.move(moveSpeed, 0);
   });
   onKeyDown("left", () => {
+    player.use(sprite("playerLeft"));
     player.move(-moveSpeed, 0);
   });
   onKeyDown("down", () => {
