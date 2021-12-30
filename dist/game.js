@@ -2753,6 +2753,10 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     height: mapLength
   });
   loadPedit("wall", "sprites/wall.pedit");
+  loadPedit("floor", "sprites/floor.pedit");
+  loadPedit("empty", "sprites/empty.pedit");
+  loadPedit("door", "sprites/door.pedit");
+  loadPedit("console", "sprites/console.pedit");
   loadPedit("background", "sprites/background.pedit");
   loadPedit("playerLeft", "sprites/playerLeft.pedit");
   loadPedit("playerRight", "sprites/playerRight.pedit");
@@ -2760,31 +2764,43 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   var mapLength = 1e3;
   var mapBlock = 60;
   var level = addLevel([
-    "xxxxxxxxxxxxx",
-    "x           x",
-    "x   x       x",
-    "x   x       x",
-    "x   x       x",
-    "x   xxx     x",
-    "x     x     x",
-    "x   xxx     x",
-    "x   x       x",
-    "x   x x xx  x",
-    "x        x  x",
-    "x           x",
-    "xxxxxxxxxxxxx"
+    "xxxxxddxxxxx",
+    "xyy        x",
+    "xyy        x",
+    "xyy        x",
+    "xyy        x",
+    "xyyeeeeee  x",
+    "x  xyyyyx  x",
+    "x  xyyyyx  x",
+    "x  xyyyyx  x",
+    "x xyyyyyyx x",
+    "xxyyyyyyyyxx",
+    "xyyyyyyyyyyx",
+    "xxxxxxxxxxxx"
   ], {
     width: mapBlock,
     height: mapBlock,
-    "x": () => [sprite("wall"), area(), solid(), "wall"]
+    "x": () => [sprite("wall"), area(), solid(), "wall"],
+    "y": () => [sprite("floor"), area()],
+    "e": () => [sprite("empty"), area(), solid()],
+    "d": () => [sprite("door"), area()]
   });
   var moveSpeed = 200;
   var player = add([
     sprite("playerRight"),
     scale(1),
-    pos(60, 60),
+    pos(400, 600),
     area(),
-    solid()
+    solid(),
+    "player"
+  ]);
+  var console2 = add([
+    sprite("console"),
+    scale(1),
+    pos(330, 425),
+    area(),
+    solid(),
+    "console"
   ]);
   onKeyDown("right", () => {
     player.use(sprite("playerRight"));
@@ -2799,6 +2815,15 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   });
   onKeyDown("up", () => {
     player.move(0, -moveSpeed);
+  });
+  var dia = add([
+    text("hi"),
+    pos(24, 24),
+    { value: 0 }
+  ]);
+  player.onCollide("console", () => {
+    dia.text = "enter code";
+    debug.log("contact");
   });
 })();
 //# sourceMappingURL=game.js.map

@@ -13,3 +13,7 @@ A document to make notes and reflections about the development of my game
 ### 29/12/2021
 
  - Created a basic map with walls and player sprite. Player has movement that changes based on direction, walls and player are solid so can't move through each other. 
+
+ - created the structure of the first map.
+
+ - tried to get text to appear when player is in proximity to an object in the game. Can only get text to appear, cannot seem to find functionality for checking constant proximity. 
