@@ -18,7 +18,7 @@ loadPedit("playerRight", "sprites/playerRight.pedit");
 
 const mapWidth = 1000;
 const mapLength  = 1000;
-const mapBlock = 60;
+const mapBlock = 64;
 
 const level = addLevel([
   "xxxxxddxxxxx",
@@ -43,7 +43,7 @@ const level = addLevel([
   "d": ()=>[sprite("door"), area()], 
 });
 
-const moveSpeed = 200
+let moveSpeed = 200
 
 const player = add([
   sprite("playerRight"),
@@ -79,17 +79,57 @@ onKeyDown("up", ()=>{
   player.move(0, -moveSpeed)
 })
 
+
+// this constant is for dialogue the player sees on screen
 const dia = add([
     text(""),
     pos(24, 24),
-    { value: 0 },
+    { value: 0,
+      width: 50,
+      size: 36,
+      font: "sinko" },
 ]);
 
+// allows player to access console
+// player.onCollide("console",()=>{
+//      if(isKeyPressed("z")){  
+//          dia.text = "enter code, or press x to leave console. Code:"
+//          moveSpeed = 0
+//          }})
 
-player.onCollide("console",()=>{
-         dia.text = "enter code"
-         debug.log("contact")
-    })
+//allows player to exit out and continue exploring
+// onUpdate(()=>{
+//   debug.log(`${player.pos.x} + ${player.pos.y}`)
+//   if(moveSpeed === 0){
+//     if(isKeyPressed("x")){
+//     dia.text = ""
+//     moveSpeed = 200
+//          }else{onCharInput((ch) => {
+//     dia.text += ch
+// })}
+// }})
+
+// tracks player location
+let playerLocY;
+let playerLocX
+onUpdate(()=>{
+  playerLocY = player.pos.y
+  playerLocX = player.pos.x
+})
 
 
+onUpdate(()=>{
+  debug.log(`${player.pos.x} + ${player.pos.y}`)
+  if(playerLocY === 489 && (playerLocX > 310 && playerLocX < 365)){
+    if(isKeyPressed("z")){  
+         dia.text = "enter code, or press x to leave console. Code:"
+         moveSpeed = 0
+         }
+    if(isKeyPressed("x")){
+    dia.text = ""
+    moveSpeed = 200
+         }
+}})
 
+// else{onCharInput((ch) => {
+//     dia.text += ch

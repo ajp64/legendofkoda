@@ -2762,7 +2762,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   loadPedit("playerRight", "sprites/playerRight.pedit");
   var mapWidth = 1e3;
   var mapLength = 1e3;
-  var mapBlock = 60;
+  var mapBlock = 64;
   var level = addLevel([
     "xxxxxddxxxxx",
     "xyy        x",
@@ -2817,13 +2817,33 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     player.move(0, -moveSpeed);
   });
   var dia = add([
-    text("hi"),
+    text(""),
     pos(24, 24),
-    { value: 0 }
+    {
+      value: 0,
+      width: 50,
+      size: 36,
+      font: "sinko"
+    }
   ]);
-  player.onCollide("console", () => {
-    dia.text = "enter code";
-    debug.log("contact");
+  var playerLocY;
+  var playerLocX;
+  onUpdate(() => {
+    playerLocY = player.pos.y;
+    playerLocX = player.pos.x;
+  });
+  onUpdate(() => {
+    debug.log(`${player.pos.x} + ${player.pos.y}`);
+    if (playerLocY === 489 && (playerLocX > 310 && playerLocX < 365)) {
+      if (isKeyPressed("z")) {
+        dia.text = "enter code, or press x to leave console. Code:";
+        moveSpeed = 0;
+      }
+      if (isKeyPressed("x")) {
+        dia.text = "";
+        moveSpeed = 200;
+      }
+    }
   });
 })();
 //# sourceMappingURL=game.js.map
