@@ -18,8 +18,10 @@ loadPedit("empty", "sprites/empty.pedit");
 loadPedit("door", "sprites/door.pedit");
 loadPedit("switch", "sprites/switch.pedit");
 loadPedit("screen", "sprites/screen.pedit");
+loadSprite("screenpx", "sprites/screenpx.png");
 loadPedit("screenOff", "sprites/screenOff.pedit");
 loadPedit("console", "sprites/console.pedit");
+loadPedit("openDoor", "sprites/openDoor.pedit");
 loadPedit("iWall", "sprites/iWall.pedit");
 loadPedit("vWall", "sprites/vWall.pedit");
 loadPedit("vWall2", "sprites/vWall2.pedit");
@@ -79,7 +81,7 @@ const console = add([
   "console"
 ]); 
 
-const button = add([
+let button = add([
   sprite("switch"),
   scale(1),
   pos(512,0),
@@ -109,10 +111,10 @@ function reWall(x,y){
   "iWall"
 ]);
 }
-
+let vWall = add([sprite("screenOff")])
 // puts vertical invisible wall back in place at new location
 function vertWall(x,y){
-  let vWall = add([
+    vWall = add([
   sprite("vWall"),
   scale(4),
   pos(x,y),
@@ -121,10 +123,10 @@ function vertWall(x,y){
   "vWall"
 ]);
 }
-
+let vWall2 = add([sprite("screenOff")])
 // puts second vertical invisible wall back in place at new location
 function vert2Wall(x,y){
-  let vWall2 = add([
+    vWall2 = add([
   sprite("vWall2"),
   scale(4),
   pos(x,y),
@@ -170,6 +172,12 @@ function bridge2Move(x,y){
   "bridge"
 ]);
 }
+//destroys all vertical walls
+function killWalls(){
+  destroy(iWall);
+  destroy(vWall);
+  destroy(vWall2);
+}
 
 //destroys both halves of the bridge
 function killBridge(){
@@ -197,9 +205,9 @@ let screen = add([sprite("screenOff")])
 // this function pops up the screen in the players game
 function screenPop(){
     screen = add([
-    sprite("screen"),
-    pos(100, 100),
-    scale(10),
+    sprite("screenpx"),
+    pos(0, 0),
+    scale(7),
     layer("ui"),
 ])};
 
@@ -233,29 +241,88 @@ onUpdate(()=>{
 // checks if a key is pressed, and if so will destroy the original out of place bridge, and place it in different places depending on the player selection.
 onKeyPress("1", () => { // center
   if(consoleOn === true){
-  destroy(iWall);
+  killWalls();
   killBridge();
   bridgeMove(220,64);
   bridge2Move(220,64);
+  vert2Wall(485,95);
+  vertWall(30,95);
+  moveSpeed = 200
+  destroy(screen)
+  consoleOn = false
   } 
 })
 onKeyPress("2", () => {  // space between
   if(consoleOn === true){
   killBridge();
+  killWalls();
   bridgeMove(440,64);
   bridge2Move(0,64);
   reWall(260,120);
+  moveSpeed = 200
+  destroy(screen)
+  consoleOn = false
   } 
 })
 onKeyPress("3", () => {  // space around
   if(consoleOn === true){
   killBridge();
-  destroy(iWall);
+  killWalls();
   bridgeMove(330,64);
   bridge2Move(110,64);
   reWall(200,120);
   vert2Wall(585,90);
   vertWall(225,75);
+  moveSpeed = 200
+  destroy(screen)
+  consoleOn = false
   } 
 })
-
+onKeyPress("4", () => {  // flex-end
+  if(consoleOn === true){
+  killBridge();
+  killWalls();
+  bridgeMove(440,64);
+  bridge2Move(440,64);
+  reWall(260,120);
+  moveSpeed = 200
+  destroy(screen)
+  consoleOn = false
+  } 
+})
+onKeyPress("5", () => {  // flex-start
+  if(consoleOn === true){
+  killBridge();
+  killWalls();
+  bridgeMove(0,64);
+  bridge2Move(0,64);
+  reWall(260,120);
+  moveSpeed = 200
+  destroy(screen)
+  consoleOn = false
+  } 
+})
+// player can stand next to the button and press it to unlock the door.
+onUpdate(()=>{
+  if(playerLocY === 64 && (playerLocX > 500 && playerLocX < 540)){
+    if(isKeyPressed("z")){  
+         button = add([
+          sprite("door"),
+          scale(1),
+          pos(512,0),
+          layer("ui"),
+          ])
+         add([
+          sprite("openDoor"),
+          pos(384, 0),
+          scale(1),
+          layer("game"),
+            ])
+            add([
+          sprite("openDoor"),
+          pos(320, 0),
+          scale(1),
+          layer("game"),
+            ])
+         }
+}})

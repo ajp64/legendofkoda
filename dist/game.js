@@ -2763,8 +2763,10 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   loadPedit("door", "sprites/door.pedit");
   loadPedit("switch", "sprites/switch.pedit");
   loadPedit("screen", "sprites/screen.pedit");
+  loadSprite("screenpx", "sprites/screenpx.png");
   loadPedit("screenOff", "sprites/screenOff.pedit");
   loadPedit("console", "sprites/console.pedit");
+  loadPedit("openDoor", "sprites/openDoor.pedit");
   loadPedit("iWall", "sprites/iWall.pedit");
   loadPedit("vWall", "sprites/vWall.pedit");
   loadPedit("vWall2", "sprites/vWall2.pedit");
@@ -2843,8 +2845,9 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     ]);
   }
   __name(reWall, "reWall");
+  var vWall = add([sprite("screenOff")]);
   function vertWall(x, y) {
-    let vWall = add([
+    vWall = add([
       sprite("vWall"),
       scale(4),
       pos(x, y),
@@ -2854,8 +2857,9 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     ]);
   }
   __name(vertWall, "vertWall");
+  var vWall2 = add([sprite("screenOff")]);
   function vert2Wall(x, y) {
-    let vWall2 = add([
+    vWall2 = add([
       sprite("vWall2"),
       scale(4),
       pos(x, y),
@@ -2899,6 +2903,12 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     ]);
   }
   __name(bridge2Move, "bridge2Move");
+  function killWalls() {
+    destroy(iWall);
+    destroy(vWall);
+    destroy(vWall2);
+  }
+  __name(killWalls, "killWalls");
   function killBridge() {
     destroy(bridge);
     destroy(bridge2);
@@ -2921,9 +2931,9 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   var screen = add([sprite("screenOff")]);
   function screenPop() {
     screen = add([
-      sprite("screen"),
-      pos(100, 100),
-      scale(10),
+      sprite("screenpx"),
+      pos(0, 0),
+      scale(7),
       layer("ui")
     ]);
   }
@@ -2952,30 +2962,90 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   });
   onKeyPress("1", () => {
     if (consoleOn === true) {
-      destroy(iWall);
+      killWalls();
       killBridge();
       bridgeMove(220, 64);
       bridge2Move(220, 64);
+      vert2Wall(485, 95);
+      vertWall(30, 95);
+      moveSpeed = 200;
+      destroy(screen);
+      consoleOn = false;
     }
   });
   onKeyPress("2", () => {
     if (consoleOn === true) {
       killBridge();
+      killWalls();
       bridgeMove(440, 64);
       bridge2Move(0, 64);
       reWall(260, 120);
+      moveSpeed = 200;
+      destroy(screen);
+      consoleOn = false;
     }
   });
   onKeyPress("3", () => {
     if (consoleOn === true) {
       killBridge();
-      destroy(iWall);
+      killWalls();
       bridgeMove(330, 64);
       bridge2Move(110, 64);
       reWall(200, 120);
       vert2Wall(585, 90);
+      vertWall(225, 75);
+      moveSpeed = 200;
+      destroy(screen);
+      consoleOn = false;
     }
   });
-  vertWall(225, 75);
+  onKeyPress("4", () => {
+    if (consoleOn === true) {
+      killBridge();
+      killWalls();
+      bridgeMove(440, 64);
+      bridge2Move(440, 64);
+      reWall(260, 120);
+      moveSpeed = 200;
+      destroy(screen);
+      consoleOn = false;
+    }
+  });
+  onKeyPress("5", () => {
+    if (consoleOn === true) {
+      killBridge();
+      killWalls();
+      bridgeMove(0, 64);
+      bridge2Move(0, 64);
+      reWall(260, 120);
+      moveSpeed = 200;
+      destroy(screen);
+      consoleOn = false;
+    }
+  });
+  onUpdate(() => {
+    if (playerLocY === 64 && (playerLocX > 500 && playerLocX < 540)) {
+      if (isKeyPressed("z")) {
+        button = add([
+          sprite("door"),
+          scale(1),
+          pos(512, 0),
+          layer("ui")
+        ]);
+        add([
+          sprite("openDoor"),
+          pos(384, 0),
+          scale(1),
+          layer("game")
+        ]);
+        add([
+          sprite("openDoor"),
+          pos(320, 0),
+          scale(1),
+          layer("game")
+        ]);
+      }
+    }
+  });
 })();
 //# sourceMappingURL=game.js.map
