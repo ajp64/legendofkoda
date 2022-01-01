@@ -6,11 +6,25 @@ kaboom({
     height: mapLength,
   });
 
+layers([
+    "bg",
+    "game",
+    "ui",
+], "game")
+
 loadPedit("wall", "sprites/wall.pedit");
 loadPedit("floor", "sprites/floor.pedit");
 loadPedit("empty", "sprites/empty.pedit");
 loadPedit("door", "sprites/door.pedit");
+loadPedit("switch", "sprites/switch.pedit");
+loadPedit("screen", "sprites/screen.pedit");
+loadPedit("screenOff", "sprites/screenOff.pedit");
 loadPedit("console", "sprites/console.pedit");
+loadPedit("iWall", "sprites/iWall.pedit");
+loadPedit("vWall", "sprites/vWall.pedit");
+loadPedit("vWall2", "sprites/vWall2.pedit");
+loadPedit("bridge", "sprites/bridge.pedit");
+loadPedit("bridge2", "sprites/bridge2.pedit");
 loadPedit("background", "sprites/background.pedit");
 loadPedit("playerLeft", "sprites/playerLeft.pedit");
 loadPedit("playerRight", "sprites/playerRight.pedit");
@@ -20,13 +34,13 @@ const mapWidth = 1000;
 const mapLength  = 1000;
 const mapBlock = 64;
 
-const level = addLevel([
+let level = addLevel([
   "xxxxxddxxxxx",
-  "xyy        x",
-  "xyy        x",
-  "xyy        x",
-  "xyy        x",
-  "xyyeeeeee  x",
+  "x          x",
+  "x          x",
+  "x          x",
+  "x          x",
+  "x          x",
   "x  xyyyyx  x",
   "x  xyyyyx  x",
   "x  xyyyyx  x",
@@ -43,7 +57,9 @@ const level = addLevel([
   "d": ()=>[sprite("door"), area()], 
 });
 
+// defining character moveSpeed. using let so this can be reassigned to zero if need to freeze player in place for a decision
 let moveSpeed = 200
+
 
 const player = add([
   sprite("playerRight"),
@@ -63,7 +79,105 @@ const console = add([
   "console"
 ]); 
 
+const button = add([
+  sprite("switch"),
+  scale(1),
+  pos(512,0),
+  area(),
+  solid(),
+  layer("ui"),
+  "switch"
+]); 
 
+// invisible wall to control when player can move to exit
+let iWall = add([
+  sprite("iWall"),
+  scale(4),
+  pos(260,120),
+  area(),
+  solid(),
+  "iWall"
+]);
+// puts invisible wall back in place at new location
+function reWall(x,y){
+  iWall = add([
+  sprite("iWall"),
+  scale(4),
+  pos(x,y),
+  area(),
+  solid(),
+  "iWall"
+]);
+}
+
+// puts vertical invisible wall back in place at new location
+function vertWall(x,y){
+  let vWall = add([
+  sprite("vWall"),
+  scale(4),
+  pos(x,y),
+  area(),
+  solid(),
+  "vWall"
+]);
+}
+
+// puts second vertical invisible wall back in place at new location
+function vert2Wall(x,y){
+  let vWall2 = add([
+  sprite("vWall2"),
+  scale(4),
+  pos(x,y),
+  area(),
+  solid(),
+  "vWall"
+]);
+}
+
+// creating bridge to be moved later. 220 x position is center. 
+let bridge = add([
+  sprite("bridge"),
+  scale(5),
+  pos(0,64),
+  layer("bg"),
+  "bridge"
+]);
+// creating second half of bridge to be moved later. 220 x position is center. 
+let bridge2 = add([
+  sprite("bridge2"),
+  scale(5),
+  pos(0,64),
+  layer("bg"),
+  "bridge2"
+]);
+// moves the first half of the bridge based on x and y coord input
+function bridgeMove(x,y){
+   bridge = add([
+  sprite("bridge"),
+  scale(5),
+  pos(x,y),
+  layer("bg"),
+  "bridge"
+]);
+}
+// moves the second half of the bridge based on x and y coord input
+function bridge2Move(x,y){
+   bridge2 = add([
+  sprite("bridge2"),
+  scale(5),
+  pos(x,y),
+  layer("bg"),
+  "bridge"
+]);
+}
+
+//destroys both halves of the bridge
+function killBridge(){
+  destroy(bridge)
+  destroy(bridge2)
+}
+
+// basic movement controls
 onKeyDown("right", ()=>{
   player.use(sprite("playerRight")) 
   player.move(moveSpeed, 0)
@@ -78,36 +192,16 @@ onKeyDown("down", ()=>{
 onKeyDown("up", ()=>{
   player.move(0, -moveSpeed)
 })
-
-
-// this constant is for dialogue the player sees on screen
-const dia = add([
-    text(""),
-    pos(24, 24),
-    { value: 0,
-      width: 50,
-      size: 36,
-      font: "sinko" },
-]);
-
-// allows player to access console
-// player.onCollide("console",()=>{
-//      if(isKeyPressed("z")){  
-//          dia.text = "enter code, or press x to leave console. Code:"
-//          moveSpeed = 0
-//          }})
-
-//allows player to exit out and continue exploring
-// onUpdate(()=>{
-//   debug.log(`${player.pos.x} + ${player.pos.y}`)
-//   if(moveSpeed === 0){
-//     if(isKeyPressed("x")){
-//     dia.text = ""
-//     moveSpeed = 200
-//          }else{onCharInput((ch) => {
-//     dia.text += ch
-// })}
-// }})
+// defining a screen variable for global use. giving the default blank sprite so it exists in case player tries to "destroy" prior to accessing.
+let screen = add([sprite("screenOff")])
+// this function pops up the screen in the players game
+function screenPop(){
+    screen = add([
+    sprite("screen"),
+    pos(100, 100),
+    scale(10),
+    layer("ui"),
+])};
 
 // tracks player location
 let playerLocY;
@@ -117,19 +211,51 @@ onUpdate(()=>{
   playerLocX = player.pos.x
 })
 
+// variable to determine if the console is in use
+let consoleOn = false
 
+// player can access the console from certain coords. Z uses the console, x returns them to the game. 
 onUpdate(()=>{
   debug.log(`${player.pos.x} + ${player.pos.y}`)
   if(playerLocY === 489 && (playerLocX > 310 && playerLocX < 365)){
     if(isKeyPressed("z")){  
-         dia.text = "enter code, or press x to leave console. Code:"
+         screenPop();
+         consoleOn = true
          moveSpeed = 0
          }
     if(isKeyPressed("x")){
-    dia.text = ""
     moveSpeed = 200
+    destroy(screen)
+    consoleOn = false
          }
 }})
 
-// else{onCharInput((ch) => {
-//     dia.text += ch
+// checks if a key is pressed, and if so will destroy the original out of place bridge, and place it in different places depending on the player selection.
+onKeyPress("1", () => { // center
+  if(consoleOn === true){
+  destroy(iWall);
+  killBridge();
+  bridgeMove(220,64);
+  bridge2Move(220,64);
+  } 
+})
+onKeyPress("2", () => {  // space between
+  if(consoleOn === true){
+  killBridge();
+  bridgeMove(440,64);
+  bridge2Move(0,64);
+  reWall(260,120);
+  } 
+})
+onKeyPress("3", () => {  // space around
+  if(consoleOn === true){
+  killBridge();
+  destroy(iWall);
+  bridgeMove(330,64);
+  bridge2Move(110,64);
+  reWall(200,120);
+  vert2Wall(585,90);
+  vertWall(225,75);
+  } 
+})
+

@@ -2752,11 +2752,24 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     width: mapWidth,
     height: mapLength
   });
+  layers([
+    "bg",
+    "game",
+    "ui"
+  ], "game");
   loadPedit("wall", "sprites/wall.pedit");
   loadPedit("floor", "sprites/floor.pedit");
   loadPedit("empty", "sprites/empty.pedit");
   loadPedit("door", "sprites/door.pedit");
+  loadPedit("switch", "sprites/switch.pedit");
+  loadPedit("screen", "sprites/screen.pedit");
+  loadPedit("screenOff", "sprites/screenOff.pedit");
   loadPedit("console", "sprites/console.pedit");
+  loadPedit("iWall", "sprites/iWall.pedit");
+  loadPedit("vWall", "sprites/vWall.pedit");
+  loadPedit("vWall2", "sprites/vWall2.pedit");
+  loadPedit("bridge", "sprites/bridge.pedit");
+  loadPedit("bridge2", "sprites/bridge2.pedit");
   loadPedit("background", "sprites/background.pedit");
   loadPedit("playerLeft", "sprites/playerLeft.pedit");
   loadPedit("playerRight", "sprites/playerRight.pedit");
@@ -2765,11 +2778,11 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   var mapBlock = 64;
   var level = addLevel([
     "xxxxxddxxxxx",
-    "xyy        x",
-    "xyy        x",
-    "xyy        x",
-    "xyy        x",
-    "xyyeeeeee  x",
+    "x          x",
+    "x          x",
+    "x          x",
+    "x          x",
+    "x          x",
     "x  xyyyyx  x",
     "x  xyyyyx  x",
     "x  xyyyyx  x",
@@ -2802,6 +2815,95 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     solid(),
     "console"
   ]);
+  var button = add([
+    sprite("switch"),
+    scale(1),
+    pos(512, 0),
+    area(),
+    solid(),
+    layer("ui"),
+    "switch"
+  ]);
+  var iWall = add([
+    sprite("iWall"),
+    scale(4),
+    pos(260, 120),
+    area(),
+    solid(),
+    "iWall"
+  ]);
+  function reWall(x, y) {
+    iWall = add([
+      sprite("iWall"),
+      scale(4),
+      pos(x, y),
+      area(),
+      solid(),
+      "iWall"
+    ]);
+  }
+  __name(reWall, "reWall");
+  function vertWall(x, y) {
+    let vWall = add([
+      sprite("vWall"),
+      scale(4),
+      pos(x, y),
+      area(),
+      solid(),
+      "vWall"
+    ]);
+  }
+  __name(vertWall, "vertWall");
+  function vert2Wall(x, y) {
+    let vWall2 = add([
+      sprite("vWall2"),
+      scale(4),
+      pos(x, y),
+      area(),
+      solid(),
+      "vWall"
+    ]);
+  }
+  __name(vert2Wall, "vert2Wall");
+  var bridge = add([
+    sprite("bridge"),
+    scale(5),
+    pos(0, 64),
+    layer("bg"),
+    "bridge"
+  ]);
+  var bridge2 = add([
+    sprite("bridge2"),
+    scale(5),
+    pos(0, 64),
+    layer("bg"),
+    "bridge2"
+  ]);
+  function bridgeMove(x, y) {
+    bridge = add([
+      sprite("bridge"),
+      scale(5),
+      pos(x, y),
+      layer("bg"),
+      "bridge"
+    ]);
+  }
+  __name(bridgeMove, "bridgeMove");
+  function bridge2Move(x, y) {
+    bridge2 = add([
+      sprite("bridge2"),
+      scale(5),
+      pos(x, y),
+      layer("bg"),
+      "bridge"
+    ]);
+  }
+  __name(bridge2Move, "bridge2Move");
+  function killBridge() {
+    destroy(bridge);
+    destroy(bridge2);
+  }
+  __name(killBridge, "killBridge");
   onKeyDown("right", () => {
     player.use(sprite("playerRight"));
     player.move(moveSpeed, 0);
@@ -2816,34 +2918,64 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   onKeyDown("up", () => {
     player.move(0, -moveSpeed);
   });
-  var dia = add([
-    text(""),
-    pos(24, 24),
-    {
-      value: 0,
-      width: 50,
-      size: 36,
-      font: "sinko"
-    }
-  ]);
+  var screen = add([sprite("screenOff")]);
+  function screenPop() {
+    screen = add([
+      sprite("screen"),
+      pos(100, 100),
+      scale(10),
+      layer("ui")
+    ]);
+  }
+  __name(screenPop, "screenPop");
   var playerLocY;
   var playerLocX;
   onUpdate(() => {
     playerLocY = player.pos.y;
     playerLocX = player.pos.x;
   });
+  var consoleOn = false;
   onUpdate(() => {
     debug.log(`${player.pos.x} + ${player.pos.y}`);
     if (playerLocY === 489 && (playerLocX > 310 && playerLocX < 365)) {
       if (isKeyPressed("z")) {
-        dia.text = "enter code, or press x to leave console. Code:";
+        screenPop();
+        consoleOn = true;
         moveSpeed = 0;
       }
       if (isKeyPressed("x")) {
-        dia.text = "";
         moveSpeed = 200;
+        destroy(screen);
+        consoleOn = false;
       }
     }
   });
+  onKeyPress("1", () => {
+    if (consoleOn === true) {
+      destroy(iWall);
+      killBridge();
+      bridgeMove(220, 64);
+      bridge2Move(220, 64);
+    }
+  });
+  onKeyPress("2", () => {
+    if (consoleOn === true) {
+      killBridge();
+      bridgeMove(440, 64);
+      bridge2Move(0, 64);
+      reWall(260, 120);
+    }
+  });
+  onKeyPress("3", () => {
+    if (consoleOn === true) {
+      killBridge();
+      destroy(iWall);
+      bridgeMove(330, 64);
+      bridge2Move(110, 64);
+      reWall(200, 120);
+      vert2Wall(585, 90);
+    }
+  });
+  vertWall(225, 75);
 })();
 //# sourceMappingURL=game.js.map
