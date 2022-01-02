@@ -48,3 +48,5 @@ A document to make notes and reflections about the development of my game
 
   - added a message that lets the player know the door has been unlocked when they flip the switch.
 
+  - added an intro screen explaining the first level
+

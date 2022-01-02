@@ -2801,10 +2801,23 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   loadPedit("playerLeft", "sprites/playerLeft.pedit");
   loadPedit("playerRight", "sprites/playerRight.pedit");
   loadSprite("start", "sprites/start.png");
+  loadSprite("levelone", "sprites/levelone.png");
   scene("start", () => {
     add([
       sprite("start"),
-      pos(50, 160),
+      pos(50, 70),
+      color(255, 255, 255),
+      scale(6)
+    ]);
+    keyRelease("enter", () => {
+      go("gamebrief");
+    });
+  });
+  go("start");
+  scene("gamebrief", () => {
+    add([
+      sprite("levelone"),
+      pos(50, 70),
       color(255, 255, 255),
       scale(6)
     ]);
@@ -2812,7 +2825,6 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       go("game");
     });
   });
-  go("start");
   scene("game", () => {
     layers([
       "bg",

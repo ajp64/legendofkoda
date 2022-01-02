@@ -32,13 +32,29 @@ loadPedit("background", "sprites/background.pedit");
 loadPedit("playerLeft", "sprites/playerLeft.pedit");
 loadPedit("playerRight", "sprites/playerRight.pedit");
 loadSprite("start", "sprites/start.png");
+loadSprite("levelone", "sprites/levelone.png");
 
 // intro scene to game
 scene("start", () => {
 
   add([
     sprite("start", ),
-    pos(50, 160),
+    pos(50, 70),
+    color(255, 255, 255),
+    scale(6)
+  ]);
+
+  keyRelease("enter", () => {
+    go("gamebrief");
+  })
+});
+
+go("start");
+
+scene("gamebrief",()=>{
+add([
+    sprite("levelone", ),
+    pos(50, 70),
     color(255, 255, 255),
     scale(6)
   ]);
@@ -46,9 +62,7 @@ scene("start", () => {
   keyRelease("enter", () => {
     go("game");
   })
-});
-
-go("start");
+})
 
 
 scene("game", () => {
