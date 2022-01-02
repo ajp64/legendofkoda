@@ -39,4 +39,12 @@ A document to make notes and reflections about the development of my game
     - Add another interactive sign that explains the bridge
     - add text that tells the player the door is locked if they try using it before the switch is flipped
 
+### 2/01/2021
+  - to simplify the code, tried to move parts of it to another file and import it to main.js. This is proving problematic however, and I can't seem to resolve it. I have got it working with the level maps, so these have been moved to maps.js as well as the object configuring the maps. 
+
+  - added an intro screen, and moved the code into a scene structure. first scene is an intro screen, second scene is the first level of the game.
+
+  - added a check for if the door is locked or not. if locked, the player gets a message telling them this which is removed after 3 seconds. Had to make the text a variable with a tag and "destroyall" targetting that tag to get the message to dissapear if the player constantly tries to access the door.
+
+  - added a message that lets the player know the door has been unlocked when they flip the switch.
 

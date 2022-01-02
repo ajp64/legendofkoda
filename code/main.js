@@ -1,22 +1,23 @@
 import kaboom from "kaboom"
+import {maps, lvlConfig} from "./maps.js"
+
+const mapWidth = 1000;
+const mapLength  = 1000;
+const mapBlock = 64;
 
 kaboom({
     background: [0, 0, 0],
     width: mapWidth,
     height: mapLength,
-  });
-
-layers([
-    "bg",
-    "game",
-    "ui",
-], "game")
+    scale: 0.5
+});
 
 loadPedit("wall", "sprites/wall.pedit");
 loadPedit("floor", "sprites/floor.pedit");
 loadPedit("empty", "sprites/empty.pedit");
 loadPedit("door", "sprites/door.pedit");
 loadPedit("switch", "sprites/switch.pedit");
+loadPedit("switchon", "sprites/switchon.pedit");
 loadPedit("screen", "sprites/screen.pedit");
 loadSprite("screenpx", "sprites/screenpx.png");
 loadPedit("screenOff", "sprites/screenOff.pedit");
@@ -30,38 +31,41 @@ loadPedit("bridge2", "sprites/bridge2.pedit");
 loadPedit("background", "sprites/background.pedit");
 loadPedit("playerLeft", "sprites/playerLeft.pedit");
 loadPedit("playerRight", "sprites/playerRight.pedit");
+loadSprite("start", "sprites/start.png");
 
+// intro scene to game
+scene("start", () => {
 
-const mapWidth = 1000;
-const mapLength  = 1000;
-const mapBlock = 64;
+  add([
+    sprite("start", ),
+    pos(50, 160),
+    color(255, 255, 255),
+    scale(6)
+  ]);
 
-let level = addLevel([
-  "xxxxxddxxxxx",
-  "x          x",
-  "x          x",
-  "x          x",
-  "x          x",
-  "x          x",
-  "x  xyyyyx  x",
-  "x  xyyyyx  x",
-  "x  xyyyyx  x",
-  "x xyyyyyyx x",
-  "xxyyyyyyyyxx",
-  "xyyyyyyyyyyx",
-  "xxxxxxxxxxxx",
-],{
-  width: mapBlock,
-  height: mapBlock,
-  "x": ()=>[sprite("wall"), area(), solid(), "wall"],
-  "y": ()=>[sprite("floor"), area()],
-  "e": ()=>[sprite("empty"), area(), solid(),],
-  "d": ()=>[sprite("door"), area()], 
+  keyRelease("enter", () => {
+    go("game");
+  })
 });
+
+go("start");
+
+
+scene("game", () => {
+// maps and lvlConfig imported from maps.js
+
+layers([
+    "bg",
+    "game",
+    "ui",
+], "game")
+
+let level = addLevel(maps, lvlConfig);
 
 // defining character moveSpeed. using let so this can be reassigned to zero if need to freeze player in place for a decision
 let moveSpeed = 200
 
+let gameText = add(["gameText"]);
 
 const player = add([
   sprite("playerRight"),
@@ -303,11 +307,13 @@ onKeyPress("5", () => {  // flex-start
   } 
 })
 // player can stand next to the button and press it to unlock the door.
+let doorLock = true;
+
 onUpdate(()=>{
   if(playerLocY === 64 && (playerLocX > 500 && playerLocX < 540)){
-    if(isKeyPressed("z")){  
+    if(isKeyPressed("z") && doorLock === true){  
          button = add([
-          sprite("door"),
+          sprite("switchon"),
           scale(1),
           pos(512,0),
           layer("ui"),
@@ -324,5 +330,38 @@ onUpdate(()=>{
           scale(1),
           layer("game"),
             ])
+          doorLock = false;
+          gameText = add([
+            "gameText",
+            pos(24, 840),
+            text("You hear the door unlock.", {
+              size: 48,
+              width: 1000,
+              font: "sinko",
+              },
+              ),
+           ])
+           wait(3, () => {destroyAll("gameText")})
          }
 }})
+// player can exit the level when the door is unlocked, otherwise gets a message saying the door is locked
+onUpdate(()=>{
+  if(playerLocY === 64 && (playerLocX > 312 && playerLocX < 410)){
+    if(isKeyPressed("z")){  
+         if(doorLock === true){
+            gameText = add([
+            "gameText",
+            pos(24, 840),
+            text("The door is locked.", {
+              size: 48,
+              width: 1000,
+              font: "sinko",
+              },
+              ),
+           ])
+           wait(3, () => {destroyAll("gameText")})
+         }
+         }
+}})
+
+});// end of game scene

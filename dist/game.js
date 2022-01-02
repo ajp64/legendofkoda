@@ -2746,39 +2746,8 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     }), Xe;
   }, "default");
 
-  // code/main.js
-  Es({
-    background: [0, 0, 0],
-    width: mapWidth,
-    height: mapLength
-  });
-  layers([
-    "bg",
-    "game",
-    "ui"
-  ], "game");
-  loadPedit("wall", "sprites/wall.pedit");
-  loadPedit("floor", "sprites/floor.pedit");
-  loadPedit("empty", "sprites/empty.pedit");
-  loadPedit("door", "sprites/door.pedit");
-  loadPedit("switch", "sprites/switch.pedit");
-  loadPedit("screen", "sprites/screen.pedit");
-  loadSprite("screenpx", "sprites/screenpx.png");
-  loadPedit("screenOff", "sprites/screenOff.pedit");
-  loadPedit("console", "sprites/console.pedit");
-  loadPedit("openDoor", "sprites/openDoor.pedit");
-  loadPedit("iWall", "sprites/iWall.pedit");
-  loadPedit("vWall", "sprites/vWall.pedit");
-  loadPedit("vWall2", "sprites/vWall2.pedit");
-  loadPedit("bridge", "sprites/bridge.pedit");
-  loadPedit("bridge2", "sprites/bridge2.pedit");
-  loadPedit("background", "sprites/background.pedit");
-  loadPedit("playerLeft", "sprites/playerLeft.pedit");
-  loadPedit("playerRight", "sprites/playerRight.pedit");
-  var mapWidth = 1e3;
-  var mapLength = 1e3;
-  var mapBlock = 64;
-  var level = addLevel([
+  // code/maps.js
+  var maps = [
     "xxxxxddxxxxx",
     "x          x",
     "x          x",
@@ -2792,260 +2761,348 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     "xxyyyyyyyyxx",
     "xyyyyyyyyyyx",
     "xxxxxxxxxxxx"
-  ], {
+  ];
+  var mapBlock = 64;
+  var lvlConfig = {
     width: mapBlock,
     height: mapBlock,
     "x": () => [sprite("wall"), area(), solid(), "wall"],
     "y": () => [sprite("floor"), area()],
     "e": () => [sprite("empty"), area(), solid()],
-    "d": () => [sprite("door"), area()]
+    "d": () => [sprite("door"), area(), solid()]
+  };
+
+  // code/main.js
+  var mapWidth = 1e3;
+  var mapLength = 1e3;
+  Es({
+    background: [0, 0, 0],
+    width: mapWidth,
+    height: mapLength,
+    scale: 0.5
   });
-  var moveSpeed = 200;
-  var player = add([
-    sprite("playerRight"),
-    scale(1),
-    pos(400, 600),
-    area(),
-    solid(),
-    "player"
-  ]);
-  var console2 = add([
-    sprite("console"),
-    scale(1),
-    pos(330, 425),
-    area(),
-    solid(),
-    "console"
-  ]);
-  var button = add([
-    sprite("switch"),
-    scale(1),
-    pos(512, 0),
-    area(),
-    solid(),
-    layer("ui"),
-    "switch"
-  ]);
-  var iWall = add([
-    sprite("iWall"),
-    scale(4),
-    pos(260, 120),
-    area(),
-    solid(),
-    "iWall"
-  ]);
-  function reWall(x, y) {
-    iWall = add([
+  loadPedit("wall", "sprites/wall.pedit");
+  loadPedit("floor", "sprites/floor.pedit");
+  loadPedit("empty", "sprites/empty.pedit");
+  loadPedit("door", "sprites/door.pedit");
+  loadPedit("switch", "sprites/switch.pedit");
+  loadPedit("switchon", "sprites/switchon.pedit");
+  loadPedit("screen", "sprites/screen.pedit");
+  loadSprite("screenpx", "sprites/screenpx.png");
+  loadPedit("screenOff", "sprites/screenOff.pedit");
+  loadPedit("console", "sprites/console.pedit");
+  loadPedit("openDoor", "sprites/openDoor.pedit");
+  loadPedit("iWall", "sprites/iWall.pedit");
+  loadPedit("vWall", "sprites/vWall.pedit");
+  loadPedit("vWall2", "sprites/vWall2.pedit");
+  loadPedit("bridge", "sprites/bridge.pedit");
+  loadPedit("bridge2", "sprites/bridge2.pedit");
+  loadPedit("background", "sprites/background.pedit");
+  loadPedit("playerLeft", "sprites/playerLeft.pedit");
+  loadPedit("playerRight", "sprites/playerRight.pedit");
+  loadSprite("start", "sprites/start.png");
+  scene("start", () => {
+    add([
+      sprite("start"),
+      pos(50, 160),
+      color(255, 255, 255),
+      scale(6)
+    ]);
+    keyRelease("enter", () => {
+      go("game");
+    });
+  });
+  go("start");
+  scene("game", () => {
+    layers([
+      "bg",
+      "game",
+      "ui"
+    ], "game");
+    let level = addLevel(maps, lvlConfig);
+    let moveSpeed = 200;
+    let gameText = add(["gameText"]);
+    const player = add([
+      sprite("playerRight"),
+      scale(1),
+      pos(400, 600),
+      area(),
+      solid(),
+      "player"
+    ]);
+    const console2 = add([
+      sprite("console"),
+      scale(1),
+      pos(330, 425),
+      area(),
+      solid(),
+      "console"
+    ]);
+    let button = add([
+      sprite("switch"),
+      scale(1),
+      pos(512, 0),
+      area(),
+      solid(),
+      layer("ui"),
+      "switch"
+    ]);
+    let iWall = add([
       sprite("iWall"),
       scale(4),
-      pos(x, y),
+      pos(260, 120),
       area(),
       solid(),
       "iWall"
     ]);
-  }
-  __name(reWall, "reWall");
-  var vWall = add([sprite("screenOff")]);
-  function vertWall(x, y) {
-    vWall = add([
-      sprite("vWall"),
-      scale(4),
-      pos(x, y),
-      area(),
-      solid(),
-      "vWall"
-    ]);
-  }
-  __name(vertWall, "vertWall");
-  var vWall2 = add([sprite("screenOff")]);
-  function vert2Wall(x, y) {
-    vWall2 = add([
-      sprite("vWall2"),
-      scale(4),
-      pos(x, y),
-      area(),
-      solid(),
-      "vWall"
-    ]);
-  }
-  __name(vert2Wall, "vert2Wall");
-  var bridge = add([
-    sprite("bridge"),
-    scale(5),
-    pos(0, 64),
-    layer("bg"),
-    "bridge"
-  ]);
-  var bridge2 = add([
-    sprite("bridge2"),
-    scale(5),
-    pos(0, 64),
-    layer("bg"),
-    "bridge2"
-  ]);
-  function bridgeMove(x, y) {
-    bridge = add([
+    function reWall(x, y) {
+      iWall = add([
+        sprite("iWall"),
+        scale(4),
+        pos(x, y),
+        area(),
+        solid(),
+        "iWall"
+      ]);
+    }
+    __name(reWall, "reWall");
+    let vWall = add([sprite("screenOff")]);
+    function vertWall(x, y) {
+      vWall = add([
+        sprite("vWall"),
+        scale(4),
+        pos(x, y),
+        area(),
+        solid(),
+        "vWall"
+      ]);
+    }
+    __name(vertWall, "vertWall");
+    let vWall2 = add([sprite("screenOff")]);
+    function vert2Wall(x, y) {
+      vWall2 = add([
+        sprite("vWall2"),
+        scale(4),
+        pos(x, y),
+        area(),
+        solid(),
+        "vWall"
+      ]);
+    }
+    __name(vert2Wall, "vert2Wall");
+    let bridge = add([
       sprite("bridge"),
       scale(5),
-      pos(x, y),
+      pos(0, 64),
       layer("bg"),
       "bridge"
     ]);
-  }
-  __name(bridgeMove, "bridgeMove");
-  function bridge2Move(x, y) {
-    bridge2 = add([
+    let bridge2 = add([
       sprite("bridge2"),
       scale(5),
-      pos(x, y),
+      pos(0, 64),
       layer("bg"),
-      "bridge"
+      "bridge2"
     ]);
-  }
-  __name(bridge2Move, "bridge2Move");
-  function killWalls() {
-    destroy(iWall);
-    destroy(vWall);
-    destroy(vWall2);
-  }
-  __name(killWalls, "killWalls");
-  function killBridge() {
-    destroy(bridge);
-    destroy(bridge2);
-  }
-  __name(killBridge, "killBridge");
-  onKeyDown("right", () => {
-    player.use(sprite("playerRight"));
-    player.move(moveSpeed, 0);
-  });
-  onKeyDown("left", () => {
-    player.use(sprite("playerLeft"));
-    player.move(-moveSpeed, 0);
-  });
-  onKeyDown("down", () => {
-    player.move(0, moveSpeed);
-  });
-  onKeyDown("up", () => {
-    player.move(0, -moveSpeed);
-  });
-  var screen = add([sprite("screenOff")]);
-  function screenPop() {
-    screen = add([
-      sprite("screenpx"),
-      pos(0, 0),
-      scale(7),
-      layer("ui")
-    ]);
-  }
-  __name(screenPop, "screenPop");
-  var playerLocY;
-  var playerLocX;
-  onUpdate(() => {
-    playerLocY = player.pos.y;
-    playerLocX = player.pos.x;
-  });
-  var consoleOn = false;
-  onUpdate(() => {
-    debug.log(`${player.pos.x} + ${player.pos.y}`);
-    if (playerLocY === 489 && (playerLocX > 310 && playerLocX < 365)) {
-      if (isKeyPressed("z")) {
-        screenPop();
-        consoleOn = true;
-        moveSpeed = 0;
+    function bridgeMove(x, y) {
+      bridge = add([
+        sprite("bridge"),
+        scale(5),
+        pos(x, y),
+        layer("bg"),
+        "bridge"
+      ]);
+    }
+    __name(bridgeMove, "bridgeMove");
+    function bridge2Move(x, y) {
+      bridge2 = add([
+        sprite("bridge2"),
+        scale(5),
+        pos(x, y),
+        layer("bg"),
+        "bridge"
+      ]);
+    }
+    __name(bridge2Move, "bridge2Move");
+    function killWalls() {
+      destroy(iWall);
+      destroy(vWall);
+      destroy(vWall2);
+    }
+    __name(killWalls, "killWalls");
+    function killBridge() {
+      destroy(bridge);
+      destroy(bridge2);
+    }
+    __name(killBridge, "killBridge");
+    onKeyDown("right", () => {
+      player.use(sprite("playerRight"));
+      player.move(moveSpeed, 0);
+    });
+    onKeyDown("left", () => {
+      player.use(sprite("playerLeft"));
+      player.move(-moveSpeed, 0);
+    });
+    onKeyDown("down", () => {
+      player.move(0, moveSpeed);
+    });
+    onKeyDown("up", () => {
+      player.move(0, -moveSpeed);
+    });
+    let screen = add([sprite("screenOff")]);
+    function screenPop() {
+      screen = add([
+        sprite("screenpx"),
+        pos(0, 0),
+        scale(7),
+        layer("ui")
+      ]);
+    }
+    __name(screenPop, "screenPop");
+    ;
+    let playerLocY;
+    let playerLocX;
+    onUpdate(() => {
+      playerLocY = player.pos.y;
+      playerLocX = player.pos.x;
+    });
+    let consoleOn = false;
+    onUpdate(() => {
+      debug.log(`${player.pos.x} + ${player.pos.y}`);
+      if (playerLocY === 489 && (playerLocX > 310 && playerLocX < 365)) {
+        if (isKeyPressed("z")) {
+          screenPop();
+          consoleOn = true;
+          moveSpeed = 0;
+        }
+        if (isKeyPressed("x")) {
+          moveSpeed = 200;
+          destroy(screen);
+          consoleOn = false;
+        }
       }
-      if (isKeyPressed("x")) {
+    });
+    onKeyPress("1", () => {
+      if (consoleOn === true) {
+        killWalls();
+        killBridge();
+        bridgeMove(220, 64);
+        bridge2Move(220, 64);
+        vert2Wall(485, 95);
+        vertWall(30, 95);
         moveSpeed = 200;
         destroy(screen);
         consoleOn = false;
       }
-    }
-  });
-  onKeyPress("1", () => {
-    if (consoleOn === true) {
-      killWalls();
-      killBridge();
-      bridgeMove(220, 64);
-      bridge2Move(220, 64);
-      vert2Wall(485, 95);
-      vertWall(30, 95);
-      moveSpeed = 200;
-      destroy(screen);
-      consoleOn = false;
-    }
-  });
-  onKeyPress("2", () => {
-    if (consoleOn === true) {
-      killBridge();
-      killWalls();
-      bridgeMove(440, 64);
-      bridge2Move(0, 64);
-      reWall(260, 120);
-      moveSpeed = 200;
-      destroy(screen);
-      consoleOn = false;
-    }
-  });
-  onKeyPress("3", () => {
-    if (consoleOn === true) {
-      killBridge();
-      killWalls();
-      bridgeMove(330, 64);
-      bridge2Move(110, 64);
-      reWall(200, 120);
-      vert2Wall(585, 90);
-      vertWall(225, 75);
-      moveSpeed = 200;
-      destroy(screen);
-      consoleOn = false;
-    }
-  });
-  onKeyPress("4", () => {
-    if (consoleOn === true) {
-      killBridge();
-      killWalls();
-      bridgeMove(440, 64);
-      bridge2Move(440, 64);
-      reWall(260, 120);
-      moveSpeed = 200;
-      destroy(screen);
-      consoleOn = false;
-    }
-  });
-  onKeyPress("5", () => {
-    if (consoleOn === true) {
-      killBridge();
-      killWalls();
-      bridgeMove(0, 64);
-      bridge2Move(0, 64);
-      reWall(260, 120);
-      moveSpeed = 200;
-      destroy(screen);
-      consoleOn = false;
-    }
-  });
-  onUpdate(() => {
-    if (playerLocY === 64 && (playerLocX > 500 && playerLocX < 540)) {
-      if (isKeyPressed("z")) {
-        button = add([
-          sprite("door"),
-          scale(1),
-          pos(512, 0),
-          layer("ui")
-        ]);
-        add([
-          sprite("openDoor"),
-          pos(384, 0),
-          scale(1),
-          layer("game")
-        ]);
-        add([
-          sprite("openDoor"),
-          pos(320, 0),
-          scale(1),
-          layer("game")
-        ]);
+    });
+    onKeyPress("2", () => {
+      if (consoleOn === true) {
+        killBridge();
+        killWalls();
+        bridgeMove(440, 64);
+        bridge2Move(0, 64);
+        reWall(260, 120);
+        moveSpeed = 200;
+        destroy(screen);
+        consoleOn = false;
       }
-    }
+    });
+    onKeyPress("3", () => {
+      if (consoleOn === true) {
+        killBridge();
+        killWalls();
+        bridgeMove(330, 64);
+        bridge2Move(110, 64);
+        reWall(200, 120);
+        vert2Wall(585, 90);
+        vertWall(225, 75);
+        moveSpeed = 200;
+        destroy(screen);
+        consoleOn = false;
+      }
+    });
+    onKeyPress("4", () => {
+      if (consoleOn === true) {
+        killBridge();
+        killWalls();
+        bridgeMove(440, 64);
+        bridge2Move(440, 64);
+        reWall(260, 120);
+        moveSpeed = 200;
+        destroy(screen);
+        consoleOn = false;
+      }
+    });
+    onKeyPress("5", () => {
+      if (consoleOn === true) {
+        killBridge();
+        killWalls();
+        bridgeMove(0, 64);
+        bridge2Move(0, 64);
+        reWall(260, 120);
+        moveSpeed = 200;
+        destroy(screen);
+        consoleOn = false;
+      }
+    });
+    let doorLock = true;
+    onUpdate(() => {
+      if (playerLocY === 64 && (playerLocX > 500 && playerLocX < 540)) {
+        if (isKeyPressed("z") && doorLock === true) {
+          button = add([
+            sprite("switchon"),
+            scale(1),
+            pos(512, 0),
+            layer("ui")
+          ]);
+          add([
+            sprite("openDoor"),
+            pos(384, 0),
+            scale(1),
+            layer("game")
+          ]);
+          add([
+            sprite("openDoor"),
+            pos(320, 0),
+            scale(1),
+            layer("game")
+          ]);
+          doorLock = false;
+          gameText = add([
+            "gameText",
+            pos(24, 840),
+            text("You hear the door unlock.", {
+              size: 48,
+              width: 1e3,
+              font: "sinko"
+            })
+          ]);
+          wait(3, () => {
+            destroyAll("gameText");
+          });
+        }
+      }
+    });
+    onUpdate(() => {
+      if (playerLocY === 64 && (playerLocX > 312 && playerLocX < 410)) {
+        if (isKeyPressed("z")) {
+          if (doorLock === true) {
+            gameText = add([
+              "gameText",
+              pos(24, 840),
+              text("The door is locked.", {
+                size: 48,
+                width: 1e3,
+                font: "sinko"
+              })
+            ]);
+            wait(3, () => {
+              destroyAll("gameText");
+            });
+          }
+        }
+      }
+    });
   });
 })();
 //# sourceMappingURL=game.js.map
