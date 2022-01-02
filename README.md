@@ -14,3 +14,7 @@ I am also using boords.com to map out my level design.
 
 The goal I am aiming for is 3 seperate levels, that can be accessed subsequently by solving a puzzle in the previous level. By solving a puzzle, the player will open a door which will allow them to access the next level. I will begin with basic sprites, and improve these if I have the time. 
 
+## DevLog
+
+I've maintained a [DevLog](https://github.com/ajp64/gametest/blob/main/devlog.md) in this repo for notes and relflections on how the game has turned out.
+
