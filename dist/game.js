@@ -2831,7 +2831,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     background: [0, 0, 0],
     width: mapWidth,
     height: mapLength,
-    scale: 0.5
+    scale: 0.7
   });
   loadPedit("wall", "sprites/wall.pedit");
   loadPedit("floor", "sprites/floor.pedit");
@@ -3039,11 +3039,6 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
           screenPop();
           consoleOn = true;
           moveSpeed = 0;
-        }
-        if (isKeyPressed("x")) {
-          moveSpeed = 200;
-          destroy(screen);
-          consoleOn = false;
         }
       }
     });

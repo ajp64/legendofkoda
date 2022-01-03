@@ -18,3 +18,7 @@ The goal I am aiming for is 3 seperate levels, that can be accessed subsequently
 
 I've maintained a [DevLog](https://github.com/ajp64/gametest/blob/main/devlog.md) in this repo for notes and relflections on how the game has turned out.
 
+## Replit
+
+Check out the Replit [here](https://replit.com/@ajp64/LegendOfKoda) (Note: Needs to be running from the host in order for others to play it.)
+

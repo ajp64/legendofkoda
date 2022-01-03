@@ -11,7 +11,7 @@ kaboom({
     background: [0, 0, 0],
     width: mapWidth,
     height: mapLength,
-    scale: 0.5
+    scale: 0.7
 });
 
 loadPedit("wall", "sprites/wall.pedit");
@@ -256,11 +256,6 @@ onUpdate(()=>{
          screenPop();
          consoleOn = true
          moveSpeed = 0
-         }
-    if(isKeyPressed("x")){
-    moveSpeed = 200
-    destroy(screen)
-    consoleOn = false
          }
 }})
 
