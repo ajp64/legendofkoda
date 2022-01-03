@@ -1,5 +1,7 @@
+
 import kaboom from "kaboom"
 import {maps, lvlConfig} from "./maps.js"
+import {levelTwo} from "./level2.js"
 
 const mapWidth = 1000;
 const mapLength  = 1000;
@@ -26,6 +28,7 @@ loadPedit("openDoor", "sprites/openDoor.pedit");
 loadPedit("iWall", "sprites/iWall.pedit");
 loadPedit("vWall", "sprites/vWall.pedit");
 loadPedit("vWall2", "sprites/vWall2.pedit");
+loadPedit("vWall3", "sprites/vWall3.pedit");
 loadPedit("bridge", "sprites/bridge.pedit");
 loadPedit("bridge2", "sprites/bridge2.pedit");
 loadPedit("background", "sprites/background.pedit");
@@ -60,13 +63,13 @@ add([
   ]);
 
   keyRelease("enter", () => {
-    go("game");
+    go("gameone");
   })
 })
 
 
-scene("game", () => {
-// maps and lvlConfig imported from maps.js
+scene("gameone", () => {
+
 
 layers([
     "bg",
@@ -74,17 +77,20 @@ layers([
     "ui",
 ], "game")
 
-let level = addLevel(maps, lvlConfig);
+// maps and lvlConfig imported from maps.js
+let level = addLevel(maps[0], lvlConfig);
+
 
 // defining character moveSpeed. using let so this can be reassigned to zero if need to freeze player in place for a decision
 let moveSpeed = 200
 
 let gameText = add(["gameText"]);
 
+
 const player = add([
   sprite("playerRight"),
   scale(1),
-  pos(400,600),
+  pos(74,711),
   area(),
   solid(),
   "player"
@@ -218,6 +224,8 @@ onKeyDown("down", ()=>{
 onKeyDown("up", ()=>{
   player.move(0, -moveSpeed)
 })
+
+
 // defining a screen variable for global use. giving the default blank sprite so it exists in case player tries to "destroy" prior to accessing.
 let screen = add([sprite("screenOff")])
 // this function pops up the screen in the players game
@@ -374,8 +382,13 @@ onUpdate(()=>{
               ),
            ])
            wait(3, () => {destroyAll("gameText")})
+         }else{
+           go("gametwo")
          }
          }
 }})
 
-});// end of game scene
+});// end of level one game scene
+
+scene("gametwo", levelTwo)
+

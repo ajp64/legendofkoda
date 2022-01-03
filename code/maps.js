@@ -1,17 +1,33 @@
-export const maps = [
+export const maps = [[
   "xxxxxddxxxxx",
   "x          x",
   "x          x",
   "x          x",
   "x          x",
   "x          x",
-  "x  xyyyyx  x",
+  "x  xxyyyx  x",
   "x  xyyyyx  x",
   "x  xyyyyx  x",
   "x xyyyyyyx x",
   "xxyyyyyyyyxx",
   "xyyyyyyyyyyx",
   "xxxxxxxxxxxx",
+],
+[
+  "xxxxxxxxxxxx",
+  "x          x",
+  "x          x",
+  "x          x",
+  "x          x",
+  "x          x",
+  "x          x",
+  "x          x",
+  "x          x",
+  "x          x",
+  "x          x",
+  "x          x",
+  "xxxxxxxxxxxx",
+],
 ];
 
 const mapWidth = 1000;

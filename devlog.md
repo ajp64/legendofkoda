@@ -50,3 +50,5 @@ A document to make notes and reflections about the development of my game
 
   - added an intro screen explaining the first level
 
+  ### 3/01/2021
+ - began on level 2. Discovered I can create the level within a function, and export it to the main file to be used as a call back. This allows me to keep the code neater. Multiple files seems to work as long as Kaboom is only called in the main file. 

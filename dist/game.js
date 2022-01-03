@@ -2748,19 +2748,36 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
 
   // code/maps.js
   var maps = [
-    "xxxxxddxxxxx",
-    "x          x",
-    "x          x",
-    "x          x",
-    "x          x",
-    "x          x",
-    "x  xyyyyx  x",
-    "x  xyyyyx  x",
-    "x  xyyyyx  x",
-    "x xyyyyyyx x",
-    "xxyyyyyyyyxx",
-    "xyyyyyyyyyyx",
-    "xxxxxxxxxxxx"
+    [
+      "xxxxxddxxxxx",
+      "x          x",
+      "x          x",
+      "x          x",
+      "x          x",
+      "x          x",
+      "x  xxyyyx  x",
+      "x  xyyyyx  x",
+      "x  xyyyyx  x",
+      "x xyyyyyyx x",
+      "xxyyyyyyyyxx",
+      "xyyyyyyyyyyx",
+      "xxxxxxxxxxxx"
+    ],
+    [
+      "xxxxxxxxxxxx",
+      "x          x",
+      "x          x",
+      "x          x",
+      "x          x",
+      "x          x",
+      "x          x",
+      "x          x",
+      "x          x",
+      "x          x",
+      "x          x",
+      "x          x",
+      "xxxxxxxxxxxx"
+    ]
   ];
   var mapBlock = 64;
   var lvlConfig = {
@@ -2771,6 +2788,41 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     "e": () => [sprite("empty"), area(), solid()],
     "d": () => [sprite("door"), area(), solid()]
   };
+
+  // code/level2.js
+  function levelTwo() {
+    layers([
+      "bg",
+      "game",
+      "ui"
+    ], "game");
+    let level = addLevel(maps[1], lvlConfig);
+    let moveSpeed = 200;
+    let gameText = add(["gameText"]);
+    const player = add([
+      sprite("playerRight"),
+      scale(1),
+      pos(353, 721),
+      area(),
+      solid(),
+      "player"
+    ]);
+    onKeyDown("right", () => {
+      player.use(sprite("playerRight"));
+      player.move(moveSpeed, 0);
+    });
+    onKeyDown("left", () => {
+      player.use(sprite("playerLeft"));
+      player.move(-moveSpeed, 0);
+    });
+    onKeyDown("down", () => {
+      player.move(0, moveSpeed);
+    });
+    onKeyDown("up", () => {
+      player.move(0, -moveSpeed);
+    });
+  }
+  __name(levelTwo, "levelTwo");
 
   // code/main.js
   var mapWidth = 1e3;
@@ -2795,6 +2847,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   loadPedit("iWall", "sprites/iWall.pedit");
   loadPedit("vWall", "sprites/vWall.pedit");
   loadPedit("vWall2", "sprites/vWall2.pedit");
+  loadPedit("vWall3", "sprites/vWall3.pedit");
   loadPedit("bridge", "sprites/bridge.pedit");
   loadPedit("bridge2", "sprites/bridge2.pedit");
   loadPedit("background", "sprites/background.pedit");
@@ -2822,22 +2875,22 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       scale(6)
     ]);
     keyRelease("enter", () => {
-      go("game");
+      go("gameone");
     });
   });
-  scene("game", () => {
+  scene("gameone", () => {
     layers([
       "bg",
       "game",
       "ui"
     ], "game");
-    let level = addLevel(maps, lvlConfig);
+    let level = addLevel(maps[0], lvlConfig);
     let moveSpeed = 200;
     let gameText = add(["gameText"]);
     const player = add([
       sprite("playerRight"),
       scale(1),
-      pos(400, 600),
+      pos(74, 711),
       area(),
       solid(),
       "player"
@@ -3111,10 +3164,13 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
             wait(3, () => {
               destroyAll("gameText");
             });
+          } else {
+            go("gametwo");
           }
         }
       }
     });
   });
+  scene("gametwo", levelTwo);
 })();
 //# sourceMappingURL=game.js.map
