@@ -55,3 +55,5 @@ A document to make notes and reflections about the development of my game
 
  ### 2/02/2021
   - started adding functionality to level 2. Came up with a way to effectively pick up an item and place it elsewhere on a level, using tracking of item and player coordinates.Have this working with one item, now need to add the other items to the level and make the code repeatable so that the puzzle can be solved.  
+
+ - fixed issue with coordinates not working when picking up item by adding a different button to put down item.

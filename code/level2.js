@@ -85,7 +85,7 @@ let inventory = {}
 // removes the line from the screen, allowing it to be used.
 onUpdate(()=>{
   if(carrying === false){
-  if(playerLocY - line1.pos.y < 30 && playerLocY - line1.pos.y > -35 &&
+  if(playerLocY - line1.pos.y < 30 && playerLocY - line1.pos.y > -40 &&
   playerLocX - line1.pos.x < 0 && playerLocX - line1.pos.x > -60){
     if(isKeyPressed("z")){  
         line1.pos.y = 860
@@ -99,8 +99,8 @@ onUpdate(()=>{
 
 onUpdate(()=>{
   if(carrying === true){
-    if(isKeyPressed("z")){  
-        inventory.item.pos.y = 40 + playerLocY
+    if(isKeyPressed("x")){  
+        inventory.item.pos.y = 10 + playerLocY
         inventory.item.pos.x = 50 + playerLocX
         carrying = false
         inventory.item = ""

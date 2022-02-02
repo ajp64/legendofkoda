@@ -2848,7 +2848,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     let inventory = {};
     onUpdate(() => {
       if (carrying === false) {
-        if (playerLocY - line1.pos.y < 30 && playerLocY - line1.pos.y > -35 && playerLocX - line1.pos.x < 0 && playerLocX - line1.pos.x > -60) {
+        if (playerLocY - line1.pos.y < 30 && playerLocY - line1.pos.y > -40 && playerLocX - line1.pos.x < 0 && playerLocX - line1.pos.x > -60) {
           if (isKeyPressed("z")) {
             line1.pos.y = 860;
             line1.pos.x = 100;
@@ -2860,8 +2860,8 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     });
     onUpdate(() => {
       if (carrying === true) {
-        if (isKeyPressed("z")) {
-          inventory.item.pos.y = 40 + playerLocY;
+        if (isKeyPressed("x")) {
+          inventory.item.pos.y = 10 + playerLocY;
           inventory.item.pos.x = 50 + playerLocX;
           carrying = false;
           inventory.item = "";
