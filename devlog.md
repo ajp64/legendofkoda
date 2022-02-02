@@ -52,3 +52,6 @@ A document to make notes and reflections about the development of my game
 
   ### 3/01/2021
  - began on level 2. Discovered I can create the level within a function, and export it to the main file to be used as a call back. This allows me to keep the code neater. Multiple files seems to work as long as Kaboom is only called in the main file. 
+
+ ### 2/02/2021
+  - started adding functionality to level 2. Came up with a way to effectively pick up an item and place it elsewhere on a level, using tracking of item and player coordinates.Have this working with one item, now need to add the other items to the level and make the code repeatable so that the puzzle can be solved.  

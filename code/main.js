@@ -11,7 +11,7 @@ kaboom({
     background: [0, 0, 0],
     width: mapWidth,
     height: mapLength,
-    scale: 0.7
+    scale: 0.5
 });
 
 loadPedit("wall", "sprites/wall.pedit");
@@ -36,9 +36,16 @@ loadPedit("playerLeft", "sprites/playerLeft.pedit");
 loadPedit("playerRight", "sprites/playerRight.pedit");
 loadSprite("start", "sprites/start.png");
 loadSprite("levelone", "sprites/levelone.png");
+loadSprite("codeblock", "sprites/codeblock.png");
+loadSprite("declarefunction", "sprites/declarefunction.png");
 
 // intro scene to game
 scene("start", () => {
+
+// skip to level 2 during devp
+  onUpdate(()=>{
+  if(isKeyPressed("p")){go("gametwo")}
+})
 
   add([
     sprite("start", ),
@@ -382,6 +389,7 @@ onUpdate(()=>{
          }
          }
 }})
+
 
 });// end of level one game scene
 

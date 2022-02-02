@@ -2765,17 +2765,17 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     ],
     [
       "xxxxxxxxxxxx",
-      "x          x",
-      "x          x",
-      "x          x",
-      "x          x",
-      "x          x",
-      "x          x",
-      "x          x",
-      "x          x",
-      "x          x",
-      "x          x",
-      "x          x",
+      "xyyyyyyyyyyx",
+      "xyyyyyyyyyyx",
+      "xyyyyyyyyyyx",
+      "xyyyyyyyyyyx",
+      "xyyyyyyyyyyx",
+      "xyyyyyyyyyyx",
+      "xyyyyyyyyyyx",
+      "xyyyyyyyyyyx",
+      "xyyyyyyyyyyx",
+      "xyyyyyyyyyyx",
+      "xyyyyyyyyyyx",
       "xxxxxxxxxxxx"
     ]
   ];
@@ -2821,6 +2821,53 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     onKeyDown("up", () => {
       player.move(0, -moveSpeed);
     });
+    let playerLocY;
+    let playerLocX;
+    onUpdate(() => {
+      playerLocY = player.pos.y;
+      playerLocX = player.pos.x;
+      debug.log(`X: ${playerLocX} Y: ${playerLocY}`);
+    });
+    const codeBlock = add([
+      sprite("codeblock"),
+      scale(3),
+      pos(150, 110),
+      area(),
+      solid(),
+      "codeblock"
+    ]);
+    const line1 = add([
+      sprite("declarefunction"),
+      scale(3),
+      pos(330, 500),
+      area(),
+      solid(),
+      "declarefunction"
+    ]);
+    let carrying = false;
+    let inventory = {};
+    onUpdate(() => {
+      if (carrying === false) {
+        if (playerLocY - line1.pos.y < 30 && playerLocY - line1.pos.y > -35 && playerLocX - line1.pos.x < 0 && playerLocX - line1.pos.x > -60) {
+          if (isKeyPressed("z")) {
+            line1.pos.y = 860;
+            line1.pos.x = 100;
+            carrying = true;
+            inventory.item = line1;
+          }
+        }
+      }
+    });
+    onUpdate(() => {
+      if (carrying === true) {
+        if (isKeyPressed("z")) {
+          inventory.item.pos.y = 40 + playerLocY;
+          inventory.item.pos.x = 50 + playerLocX;
+          carrying = false;
+          inventory.item = "";
+        }
+      }
+    });
   }
   __name(levelTwo, "levelTwo");
 
@@ -2831,7 +2878,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     background: [0, 0, 0],
     width: mapWidth,
     height: mapLength,
-    scale: 0.7
+    scale: 0.5
   });
   loadPedit("wall", "sprites/wall.pedit");
   loadPedit("floor", "sprites/floor.pedit");
@@ -2855,7 +2902,14 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   loadPedit("playerRight", "sprites/playerRight.pedit");
   loadSprite("start", "sprites/start.png");
   loadSprite("levelone", "sprites/levelone.png");
+  loadSprite("codeblock", "sprites/codeblock.png");
+  loadSprite("declarefunction", "sprites/declarefunction.png");
   scene("start", () => {
+    onUpdate(() => {
+      if (isKeyPressed("p")) {
+        go("gametwo");
+      }
+    });
     add([
       sprite("start"),
       pos(50, 70),
