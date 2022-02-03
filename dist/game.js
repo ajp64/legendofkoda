@@ -2816,9 +2816,11 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       player.move(-moveSpeed, 0);
     });
     onKeyDown("down", () => {
+      player.use(sprite("playerDown"));
       player.move(0, moveSpeed);
     });
     onKeyDown("up", () => {
+      player.use(sprite("playerUp"));
       player.move(0, -moveSpeed);
     });
     let playerLocY;
@@ -2830,7 +2832,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     });
     const codeBlock = add([
       sprite("codeblock"),
-      scale(3),
+      scale(2.25),
       pos(150, 110),
       area(),
       solid(),
@@ -2844,19 +2846,77 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       solid(),
       "declarefunction"
     ]);
+    const line2 = add([
+      sprite("line2"),
+      scale(3),
+      pos(330, 530),
+      area(),
+      solid(),
+      "line2"
+    ]);
+    const line3 = add([
+      sprite("line3"),
+      scale(3),
+      pos(330, 560),
+      area(),
+      solid(),
+      "line3"
+    ]);
+    const line4 = add([
+      sprite("line4"),
+      scale(3),
+      pos(330, 590),
+      area(),
+      solid(),
+      "line4"
+    ]);
+    const line5 = add([
+      sprite("line5"),
+      scale(3),
+      pos(330, 620),
+      area(),
+      solid(),
+      "line5"
+    ]);
+    const trick1 = add([
+      sprite("trick1"),
+      scale(3),
+      pos(330, 650),
+      area(),
+      solid(),
+      "trick1"
+    ]);
+    const trick2 = add([
+      sprite("trick2"),
+      scale(3),
+      pos(330, 680),
+      area(),
+      solid(),
+      "trick2"
+    ]);
     let carrying = false;
     let inventory = {};
-    onUpdate(() => {
+    function pickUpItem(item) {
       if (carrying === false) {
-        if (playerLocY - line1.pos.y < 30 && playerLocY - line1.pos.y > -40 && playerLocX - line1.pos.x < 0 && playerLocX - line1.pos.x > -60) {
+        if (playerLocY - item.pos.y < 5 && playerLocY - item.pos.y > -12 && playerLocX - item.pos.x < 0 && playerLocX - item.pos.x > -55) {
           if (isKeyPressed("z")) {
-            line1.pos.y = 860;
-            line1.pos.x = 100;
+            item.pos.y = 860;
+            item.pos.x = 100;
             carrying = true;
-            inventory.item = line1;
+            inventory.item = item;
           }
         }
       }
+    }
+    __name(pickUpItem, "pickUpItem");
+    onUpdate(() => {
+      pickUpItem(line1);
+      pickUpItem(line2);
+      pickUpItem(line3);
+      pickUpItem(line4);
+      pickUpItem(line5);
+      pickUpItem(trick1);
+      pickUpItem(trick2);
     });
     onUpdate(() => {
       if (carrying === true) {
@@ -2878,7 +2938,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     background: [0, 0, 0],
     width: mapWidth,
     height: mapLength,
-    scale: 0.5
+    scale: 1
   });
   loadPedit("wall", "sprites/wall.pedit");
   loadPedit("floor", "sprites/floor.pedit");
@@ -2900,10 +2960,18 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   loadPedit("background", "sprites/background.pedit");
   loadPedit("playerLeft", "sprites/playerLeft.pedit");
   loadPedit("playerRight", "sprites/playerRight.pedit");
+  loadPedit("playerDown", "sprites/playerDown.pedit");
+  loadPedit("playerUp", "sprites/playerUp.pedit");
   loadSprite("start", "sprites/start.png");
   loadSprite("levelone", "sprites/levelone.png");
   loadSprite("codeblock", "sprites/codeblock.png");
   loadSprite("declarefunction", "sprites/declarefunction.png");
+  loadSprite("line2", "sprites/line2.png");
+  loadSprite("line3", "sprites/line3.png");
+  loadSprite("line4", "sprites/line4.png");
+  loadSprite("line5", "sprites/line5.png");
+  loadSprite("trick1", "sprites/trick1.png");
+  loadSprite("trick2", "sprites/trick2.png");
   scene("start", () => {
     onUpdate(() => {
       if (isKeyPressed("p")) {
@@ -3063,9 +3131,11 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       player.move(-moveSpeed, 0);
     });
     onKeyDown("down", () => {
+      player.use(sprite("playerDown"));
       player.move(0, moveSpeed);
     });
     onKeyDown("up", () => {
+      player.use(sprite("playerUp"));
       player.move(0, -moveSpeed);
     });
     let screen = add([sprite("screenOff")]);

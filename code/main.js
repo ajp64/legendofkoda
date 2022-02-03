@@ -11,7 +11,7 @@ kaboom({
     background: [0, 0, 0],
     width: mapWidth,
     height: mapLength,
-    scale: 0.5
+    scale: 1
 });
 
 loadPedit("wall", "sprites/wall.pedit");
@@ -34,10 +34,18 @@ loadPedit("bridge2", "sprites/bridge2.pedit");
 loadPedit("background", "sprites/background.pedit");
 loadPedit("playerLeft", "sprites/playerLeft.pedit");
 loadPedit("playerRight", "sprites/playerRight.pedit");
+loadPedit("playerDown", "sprites/playerDown.pedit");
+loadPedit("playerUp", "sprites/playerUp.pedit");
 loadSprite("start", "sprites/start.png");
 loadSprite("levelone", "sprites/levelone.png");
 loadSprite("codeblock", "sprites/codeblock.png");
 loadSprite("declarefunction", "sprites/declarefunction.png");
+loadSprite("line2", "sprites/line2.png");
+loadSprite("line3", "sprites/line3.png");
+loadSprite("line4", "sprites/line4.png");
+loadSprite("line5", "sprites/line5.png");
+loadSprite("trick1", "sprites/trick1.png");
+loadSprite("trick2", "sprites/trick2.png");
 
 // intro scene to game
 scene("start", () => {
@@ -226,9 +234,11 @@ onKeyDown("left", ()=>{
   player.move(-moveSpeed, 0)
 })
 onKeyDown("down", ()=>{
+  player.use(sprite("playerDown"))
   player.move(0, moveSpeed)
 })
 onKeyDown("up", ()=>{
+  player.use(sprite("playerUp"))
   player.move(0, -moveSpeed)
 })
 

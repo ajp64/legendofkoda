@@ -57,3 +57,9 @@ A document to make notes and reflections about the development of my game
   - started adding functionality to level 2. Came up with a way to effectively pick up an item and place it elsewhere on a level, using tracking of item and player coordinates.Have this working with one item, now need to add the other items to the level and make the code repeatable so that the puzzle can be solved.  
 
  - fixed issue with coordinates not working when picking up item by adding a different button to put down item.
+
+ ### 3/02/2021
+  - moved pick up item logic into a function to make it reusable. Tweaked the coordinates around picking up and putting down items to make it smoother.
+  - added in all items/sprites so the code puzzle can be completed. Added in some incorrect lines as part of the puzzle. 
+  - next steps: make a door that is opened when the correct code lines are in place.
+
