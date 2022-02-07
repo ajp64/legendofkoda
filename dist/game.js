@@ -2828,7 +2828,6 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     onUpdate(() => {
       playerLocY = player.pos.y;
       playerLocX = player.pos.x;
-      debug.log(`X: ${playerLocX} Y: ${playerLocY}`);
     });
     const codeBlock = add([
       sprite("codeblock"),
@@ -2894,6 +2893,86 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       solid(),
       "trick2"
     ]);
+    const line1check = add([
+      sprite("line1check"),
+      scale(0.3),
+      pos(220, 120),
+      area(),
+      solid(),
+      "line1check"
+    ]);
+    const line2check = add([
+      sprite("line1check"),
+      scale(0.3),
+      pos(220, 165),
+      area(),
+      solid(),
+      "line2check"
+    ]);
+    const line3check = add([
+      sprite("line1check"),
+      scale(0.3),
+      pos(220, 210),
+      area(),
+      solid(),
+      "line3check"
+    ]);
+    const line4check = add([
+      sprite("line1check"),
+      scale(0.3),
+      pos(220, 255),
+      area(),
+      solid(),
+      "line4check"
+    ]);
+    const line5check = add([
+      sprite("line1check"),
+      scale(0.3),
+      pos(220, 300),
+      area(),
+      solid(),
+      "line5check"
+    ]);
+    let isLine1 = false;
+    let isLine2 = false;
+    let isLine3 = false;
+    let isLine4 = false;
+    let isLine5 = false;
+    onCollide("declarefunction", "line1check", () => {
+      isLine1 = true;
+    });
+    onCollide("line2", "line2check", () => {
+      isLine2 = true;
+    });
+    onCollide("line3", "line3check", () => {
+      isLine3 = true;
+    });
+    onCollide("line4", "line4check", () => {
+      isLine4 = true;
+    });
+    onCollide("line5", "line5check", () => {
+      isLine5 = true;
+    });
+    onUpdate(() => {
+      if (inventory.item === line1) {
+        isLine1 = false;
+      }
+      if (inventory.item === line2) {
+        isLine2 = false;
+      }
+      if (inventory.item === line3) {
+        isLine3 = false;
+      }
+      if (inventory.item === line4) {
+        isLine4 = false;
+      }
+      if (inventory.item === line5) {
+        isLine5 = false;
+      }
+    });
+    onUpdate(() => {
+      debug.log(isLine3);
+    });
     let carrying = false;
     let inventory = {};
     function pickUpItem(item) {
@@ -2938,7 +3017,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     background: [0, 0, 0],
     width: mapWidth,
     height: mapLength,
-    scale: 1
+    scale: 0.5
   });
   loadPedit("wall", "sprites/wall.pedit");
   loadPedit("floor", "sprites/floor.pedit");
@@ -2972,6 +3051,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   loadSprite("line5", "sprites/line5.png");
   loadSprite("trick1", "sprites/trick1.png");
   loadSprite("trick2", "sprites/trick2.png");
+  loadPedit("line1check", "sprites/line1check.pedit");
   scene("start", () => {
     onUpdate(() => {
       if (isKeyPressed("p")) {

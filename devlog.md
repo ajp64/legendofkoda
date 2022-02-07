@@ -2,8 +2,7 @@
 A document to make notes and reflections about the development of my game
 
 ### 24/12/2021
- - Investigated means to create a game using JS. Discovered Kaboom.js and replit, a JS library and browser based IDE that work together to make 
-    the process of game creation more simple.
+ - Investigated means to create a game using JS. Discovered Kaboom.js and replit, a JS library and browser based IDE that work together to make the process of game creation more simple.
  - Watched parts of a tutorial on how to use Kaboom to create clones of Space Invaders, Super Mario and Zela. Useful but noted that the video is outdated,
    and the syntax for using Kaboom has changed
    
@@ -25,7 +24,7 @@ A document to make notes and reflections about the development of my game
   ### 31/12/2021
   - added a character text input once the player accesses the console.
 
-  ### 1/01/2021
+  ### 1/01/2022
    - Due to a multitude of issues with the text entry functionality, decided to change the way the player interacts with the console by giving a set menu of options. This was achieved by registering a button input and creating a sprite showing a list of options the player could choose.
 
    - once the player is using the console, a boolean is toggled that allows them to choose where the bridge will move to based on CSS flexbox code. I decided to make the bridge two parts, so it made more sense from a CSS Flexbox perspective how it works. This was done by creating functions which create and destroy bridge sprites, based on x and y coordinates added in. The same was done with invisible walls which make sure the player can't go out of bounds.
@@ -39,7 +38,7 @@ A document to make notes and reflections about the development of my game
     - Add another interactive sign that explains the bridge
     - add text that tells the player the door is locked if they try using it before the switch is flipped
 
-### 2/01/2021
+### 2/01/2022
   - to simplify the code, tried to move parts of it to another file and import it to main.js. This is proving problematic however, and I can't seem to resolve it. I have got it working with the level maps, so these have been moved to maps.js as well as the object configuring the maps. 
 
   - added an intro screen, and moved the code into a scene structure. first scene is an intro screen, second scene is the first level of the game.
@@ -50,16 +49,20 @@ A document to make notes and reflections about the development of my game
 
   - added an intro screen explaining the first level
 
-  ### 3/01/2021
+  ### 3/01/2022
  - began on level 2. Discovered I can create the level within a function, and export it to the main file to be used as a call back. This allows me to keep the code neater. Multiple files seems to work as long as Kaboom is only called in the main file. 
 
- ### 2/02/2021
+ ### 2/02/2022
   - started adding functionality to level 2. Came up with a way to effectively pick up an item and place it elsewhere on a level, using tracking of item and player coordinates.Have this working with one item, now need to add the other items to the level and make the code repeatable so that the puzzle can be solved.  
 
  - fixed issue with coordinates not working when picking up item by adding a different button to put down item.
 
- ### 3/02/2021
+ ### 3/02/2022
   - moved pick up item logic into a function to make it reusable. Tweaked the coordinates around picking up and putting down items to make it smoother.
   - added in all items/sprites so the code puzzle can be completed. Added in some incorrect lines as part of the puzzle. 
   - next steps: make a door that is opened when the correct code lines are in place.
+
+### 7/02/2022
+ - added invisible sprites where the lines of code will go, which set a boolean to true if the correct line of code collides with the sprite. the boolean returns to false if onUpdate the game detects the item is back in the inventory. 
+ - next steps: tighten up the controls around picking up and placing lines of code. add a door that unlocks once all lines of code are in place. 
 
