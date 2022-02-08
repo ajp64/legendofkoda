@@ -47,6 +47,8 @@ loadSprite("line5", "sprites/line5.png");
 loadSprite("trick1", "sprites/trick1.png");
 loadSprite("trick2", "sprites/trick2.png");
 loadPedit("line1check", "sprites/line1check.pedit");
+loadSprite("inventory", "sprites/inventory.png");
+loadSprite("run", "sprites/run.png");
 
 // intro scene to game
 scene("start", () => {

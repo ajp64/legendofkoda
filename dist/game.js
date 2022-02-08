@@ -2828,7 +2828,22 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     onUpdate(() => {
       playerLocY = player.pos.y;
       playerLocX = player.pos.x;
+      debug.log(`X: ${playerLocX} Y: ${playerLocY}`);
     });
+    const inventorySprite = add([
+      sprite("inventory"),
+      scale(2),
+      pos(290, 920),
+      "inventory"
+    ]);
+    const runButton = add([
+      sprite("run"),
+      scale(1.75),
+      pos(340, 350),
+      area(),
+      solid(),
+      "runButton"
+    ]);
     const codeBlock = add([
       sprite("codeblock"),
       scale(2.25),
@@ -2938,6 +2953,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     let isLine3 = false;
     let isLine4 = false;
     let isLine5 = false;
+    let isUnlocked = false;
     onCollide("declarefunction", "line1check", () => {
       isLine1 = true;
     });
@@ -2969,18 +2985,20 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       if (inventory.item === line5) {
         isLine5 = false;
       }
-    });
-    onUpdate(() => {
-      debug.log(isLine3);
+      if (isLine1 === true && isLine2 === true && isLine3 === true && isLine4 === true && isLine5 === true) {
+        isUnlocked = true;
+      } else {
+        isUnlocked = false;
+      }
     });
     let carrying = false;
     let inventory = {};
     function pickUpItem(item) {
       if (carrying === false) {
-        if (playerLocY - item.pos.y < 5 && playerLocY - item.pos.y > -12 && playerLocX - item.pos.x < 0 && playerLocX - item.pos.x > -55) {
+        if (playerLocY - item.pos.y < 5 && playerLocY - item.pos.y > -15 && playerLocX - item.pos.x < 0 && playerLocX - item.pos.x > -55) {
           if (isKeyPressed("z")) {
-            item.pos.y = 860;
-            item.pos.x = 100;
+            item.pos.y = 920;
+            item.pos.x = 500;
             carrying = true;
             inventory.item = item;
           }
@@ -3052,6 +3070,8 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   loadSprite("trick1", "sprites/trick1.png");
   loadSprite("trick2", "sprites/trick2.png");
   loadPedit("line1check", "sprites/line1check.pedit");
+  loadSprite("inventory", "sprites/inventory.png");
+  loadSprite("run", "sprites/run.png");
   scene("start", () => {
     onUpdate(() => {
       if (isKeyPressed("p")) {

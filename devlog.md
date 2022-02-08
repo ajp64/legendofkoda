@@ -66,3 +66,7 @@ A document to make notes and reflections about the development of my game
  - added invisible sprites where the lines of code will go, which set a boolean to true if the correct line of code collides with the sprite. the boolean returns to false if onUpdate the game detects the item is back in the inventory. 
  - next steps: tighten up the controls around picking up and placing lines of code. add a door that unlocks once all lines of code are in place. 
 
+### 8/02/2022
+- added logic for checking that all code lines are in the right place, and unlocking door if this is true. 
+- changed idea slightly - added a button that must be pushed once lines are in place. This simplifys the sending of messages to the player once everything is correct. 
+- added an inventory sprite to the bottom of the screen, where the item the player is carrying goes. 

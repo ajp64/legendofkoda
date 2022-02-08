@@ -53,8 +53,26 @@ let playerLocX
 onUpdate(()=>{
   playerLocY = player.pos.y
   playerLocX = player.pos.x
-  // debug.log(`X: ${playerLocX} Y: ${playerLocY}`)
+   debug.log(`X: ${playerLocX} Y: ${playerLocY}`)
 })
+
+//inventory sprite
+const inventorySprite = add([
+  sprite("inventory"),
+  scale(2),
+  pos(290,920),
+  "inventory"
+]); 
+
+// run button for activating code
+const runButton = add([
+  sprite("run"),
+  scale(1.75),
+  pos(340,350),
+  area(),
+  solid(),
+  "runButton"
+]); 
 
 // code block for placing code pieces
 const codeBlock = add([
@@ -182,14 +200,15 @@ const line5check = add([
   "line5check"
 ]); 
 
-// booleans for checking correct lines of code in place
+// booleans for checking correct lines of code in place, and if door is unlocked
 let isLine1 = false
 let isLine2 = false
 let isLine3 = false
 let isLine4 = false
 let isLine5 = false
+let isUnlocked = false
 
-//checking collision of code lines with line checks (4 more to add)
+//checking collision of code lines with line checks
 onCollide("declarefunction", "line1check", () => {
     isLine1 = true
 })
@@ -210,7 +229,7 @@ onCollide("line5", "line5check", () => {
     isLine5 = true
 })
 
-//checking if inventory contains item, if so false for correct item
+//checking if inventory contains item, if so false for correct item. also checking for if all lines are true, changing the unlocked door boolean. 
 onUpdate(()=>{
 if(inventory.item === line1){
   isLine1 = false}
@@ -222,11 +241,18 @@ if(inventory.item === line4){
   isLine4 = false}
 if(inventory.item === line5){
   isLine5 = false}
+if(isLine1 === true && isLine2 === true && isLine3 === true && isLine4 === true && isLine5 === true) 
+{isUnlocked = true;
+}else{
+  isUnlocked = false
+}
 })
 
-// onUpdate(()=>{debug.log(isLine1)})
+
+//checking lines are true or false
+// onUpdate(()=>{debug.log(isUnlocked)})
 // onUpdate(()=>{debug.log(isLine2)})
-onUpdate(()=>{debug.log(isLine3)})
+// onUpdate(()=>{debug.log(isLine3)})
 // onUpdate(()=>{debug.log(isLine4)})
 // onUpdate(()=>{debug.log(isLine5)})
 
@@ -241,16 +267,17 @@ let inventory = {}
 //function to allow picking up of items
 function pickUpItem(item){
   if(carrying === false){
-  if(playerLocY - item.pos.y < 5 && playerLocY - item.pos.y > -12 &&
+  if(playerLocY - item.pos.y < 5 && playerLocY - item.pos.y > -15 &&
   playerLocX - item.pos.x < 0 && playerLocX - item.pos.x > -55){
     if(isKeyPressed("z")){  
-        item.pos.y = 860
-        item.pos.x = 100
+        item.pos.y = 920
+        item.pos.x = 500
         carrying = true
         inventory.item = item
          }
 }}
 }
+
 
 // removes the line from the screen, allowing it to be used.
 onUpdate(()=>{
