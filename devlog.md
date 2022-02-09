@@ -70,3 +70,8 @@ A document to make notes and reflections about the development of my game
 - added logic for checking that all code lines are in the right place, and unlocking door if this is true. 
 - changed idea slightly - added a button that must be pushed once lines are in place. This simplifys the sending of messages to the player once everything is correct. 
 - added an inventory sprite to the bottom of the screen, where the item the player is carrying goes. 
+
+### 9/02/2022
+- added key to player object that records direction, so this can be accessed. used this to restrict accessing run button to only when player is facing up, and picking up code blocks only when player is facing right. 
+- added logic so once all code lines are in place and player presses button, door unlocks. Still need to add door. button returns error message to player if lines not in the right place. 
+- restricted player to only placing code blocks in code area, but this might cause more problems if I am to keep using "incorrect" lines as part of the puzzle. 

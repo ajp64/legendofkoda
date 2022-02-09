@@ -17,12 +17,12 @@ layers([
 // maps and lvlConfig imported from maps.js
 let level = addLevel(maps[1], lvlConfig);
 
-let moveSpeed = 200
+let moveSpeed = 600 //increasing move speed for testing, was 200 
 
 let gameText = add(["gameText"]);
 
 const player = add([
-  sprite("playerRight"),
+  sprite("playerUp"),
   scale(1),
   pos(353,721),
   area(),
@@ -33,18 +33,22 @@ const player = add([
 onKeyDown("right", ()=>{
   player.use(sprite("playerRight")) 
   player.move(moveSpeed, 0)
+  player.dir = "RIGHT"
 })
 onKeyDown("left", ()=>{
   player.use(sprite("playerLeft")) 
   player.move(-moveSpeed, 0)
+  player.dir = "LEFT"
 })
 onKeyDown("down", ()=>{
   player.use(sprite("playerDown")) 
   player.move(0, moveSpeed)
+  player.dir = "DOWN"
 })
 onKeyDown("up", ()=>{
   player.use(sprite("playerUp")) 
   player.move(0, -moveSpeed)
+  player.dir = "UP"
 })
 
 // tracks player location
@@ -53,7 +57,8 @@ let playerLocX
 onUpdate(()=>{
   playerLocY = player.pos.y
   playerLocX = player.pos.x
-   debug.log(`X: ${playerLocX} Y: ${playerLocY}`)
+  debug.log(`X: ${playerLocX} Y: ${playerLocY}`)
+  //debug.log(player.dir)
 })
 
 //inventory sprite
@@ -200,13 +205,14 @@ const line5check = add([
   "line5check"
 ]); 
 
-// booleans for checking correct lines of code in place, and if door is unlocked
+// booleans for checking correct lines of code in place, if code is correct and if door is locked
 let isLine1 = false
 let isLine2 = false
 let isLine3 = false
 let isLine4 = false
 let isLine5 = false
-let isUnlocked = false
+let isCodeCorrect = false
+let doorLock = false
 
 //checking collision of code lines with line checks
 onCollide("declarefunction", "line1check", () => {
@@ -242,15 +248,15 @@ if(inventory.item === line4){
 if(inventory.item === line5){
   isLine5 = false}
 if(isLine1 === true && isLine2 === true && isLine3 === true && isLine4 === true && isLine5 === true) 
-{isUnlocked = true;
+{isCodeCorrect = true;
 }else{
-  isUnlocked = false
+  isCodeCorrect = false
 }
 })
 
 
 //checking lines are true or false
-// onUpdate(()=>{debug.log(isUnlocked)})
+// onUpdate(()=>{debug.log(isCodeCorrect)})
 // onUpdate(()=>{debug.log(isLine2)})
 // onUpdate(()=>{debug.log(isLine3)})
 // onUpdate(()=>{debug.log(isLine4)})
@@ -266,8 +272,8 @@ let inventory = {}
 
 //function to allow picking up of items
 function pickUpItem(item){
-  if(carrying === false){
-  if(playerLocY - item.pos.y < 5 && playerLocY - item.pos.y > -15 &&
+  if(carrying === false && player.dir === "RIGHT"){
+  if(playerLocY - item.pos.y < 5 && playerLocY - item.pos.y > -20 &&
   playerLocX - item.pos.x < 0 && playerLocX - item.pos.x > -55){
     if(isKeyPressed("z")){  
         item.pos.y = 920
@@ -290,14 +296,45 @@ onUpdate(()=>{
   pickUpItem(trick2)
 })
 
-// allows the player to put down their item
+// allows the player to put down their item, but only in the code block
 onUpdate(()=>{
-  if(carrying === true){
+  if(playerLocX >= 64 && playerLocX < 104 && playerLocY >= 93 && playerLocY < 313 && carrying === true){
     if(isKeyPressed("x")){  
         inventory.item.pos.y = 10 + playerLocY
         inventory.item.pos.x = 50 + playerLocX
         carrying = false
         inventory.item = ""
+         }
+}})
+
+// player can access the run button. If code is correct, it unlocks door.
+onUpdate(()=>{
+  if(playerLocY === 385 && (playerLocX > 320 && playerLocX < 397)){
+    if(isKeyPressed("z") && isCodeCorrect === true &&  player.dir === "UP"){  
+          doorLock = false;
+          gameText = add([
+            "gameText",
+            pos(24, 840),
+            text("You hear the door unlock.", {
+              size: 48,
+              width: 1000,
+              font: "sinko",
+              },
+              ),
+           ])
+           wait(3, () => {destroyAll("gameText")})
+         }else if (isKeyPressed("z") && isCodeCorrect === false &&  player.dir === "UP"){
+           gameText = add([
+            "gameText",
+            pos(24, 840),
+            text("An error was returned.", {
+              size: 48,
+              width: 1000,
+              font: "sinko",
+              },
+              ),
+           ])
+           wait(3, () => {destroyAll("gameText")})
          }
 }})
 

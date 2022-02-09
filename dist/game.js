@@ -2797,10 +2797,10 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       "ui"
     ], "game");
     let level = addLevel(maps[1], lvlConfig);
-    let moveSpeed = 200;
+    let moveSpeed = 600;
     let gameText = add(["gameText"]);
     const player = add([
-      sprite("playerRight"),
+      sprite("playerUp"),
       scale(1),
       pos(353, 721),
       area(),
@@ -2810,18 +2810,22 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     onKeyDown("right", () => {
       player.use(sprite("playerRight"));
       player.move(moveSpeed, 0);
+      player.dir = "RIGHT";
     });
     onKeyDown("left", () => {
       player.use(sprite("playerLeft"));
       player.move(-moveSpeed, 0);
+      player.dir = "LEFT";
     });
     onKeyDown("down", () => {
       player.use(sprite("playerDown"));
       player.move(0, moveSpeed);
+      player.dir = "DOWN";
     });
     onKeyDown("up", () => {
       player.use(sprite("playerUp"));
       player.move(0, -moveSpeed);
+      player.dir = "UP";
     });
     let playerLocY;
     let playerLocX;
@@ -2953,7 +2957,8 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     let isLine3 = false;
     let isLine4 = false;
     let isLine5 = false;
-    let isUnlocked = false;
+    let isCodeCorrect = false;
+    let doorLock = false;
     onCollide("declarefunction", "line1check", () => {
       isLine1 = true;
     });
@@ -2986,16 +2991,16 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
         isLine5 = false;
       }
       if (isLine1 === true && isLine2 === true && isLine3 === true && isLine4 === true && isLine5 === true) {
-        isUnlocked = true;
+        isCodeCorrect = true;
       } else {
-        isUnlocked = false;
+        isCodeCorrect = false;
       }
     });
     let carrying = false;
     let inventory = {};
     function pickUpItem(item) {
-      if (carrying === false) {
-        if (playerLocY - item.pos.y < 5 && playerLocY - item.pos.y > -15 && playerLocX - item.pos.x < 0 && playerLocX - item.pos.x > -55) {
+      if (carrying === false && player.dir === "RIGHT") {
+        if (playerLocY - item.pos.y < 5 && playerLocY - item.pos.y > -20 && playerLocX - item.pos.x < 0 && playerLocX - item.pos.x > -55) {
           if (isKeyPressed("z")) {
             item.pos.y = 920;
             item.pos.x = 500;
@@ -3016,12 +3021,44 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       pickUpItem(trick2);
     });
     onUpdate(() => {
-      if (carrying === true) {
+      if (playerLocX >= 64 && playerLocX < 104 && playerLocY >= 93 && playerLocY < 313 && carrying === true) {
         if (isKeyPressed("x")) {
           inventory.item.pos.y = 10 + playerLocY;
           inventory.item.pos.x = 50 + playerLocX;
           carrying = false;
           inventory.item = "";
+        }
+      }
+    });
+    onUpdate(() => {
+      if (playerLocY === 385 && (playerLocX > 320 && playerLocX < 397)) {
+        if (isKeyPressed("z") && isCodeCorrect === true && player.dir === "UP") {
+          doorLock = false;
+          gameText = add([
+            "gameText",
+            pos(24, 840),
+            text("You hear the door unlock.", {
+              size: 48,
+              width: 1e3,
+              font: "sinko"
+            })
+          ]);
+          wait(3, () => {
+            destroyAll("gameText");
+          });
+        } else if (isKeyPressed("z") && isCodeCorrect === false && player.dir === "UP") {
+          gameText = add([
+            "gameText",
+            pos(24, 840),
+            text("An error was returned.", {
+              size: 48,
+              width: 1e3,
+              font: "sinko"
+            })
+          ]);
+          wait(3, () => {
+            destroyAll("gameText");
+          });
         }
       }
     });
