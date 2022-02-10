@@ -5,6 +5,23 @@ const mapWidth = 1000;
 const mapLength  = 1000;
 const mapBlock = 64;
 
+// function that contains the intro to level two
+export function levelTwoIntro(){
+
+add([
+    sprite("leveltwo", ),
+    pos(50, 70),
+    color(255, 255, 255),
+    scale(6)
+  ]);
+
+  keyRelease("enter", () => {
+    go("gametwo");
+  })
+}
+
+
+
 export function levelTwo(){
 layers([
     "bg",
@@ -17,7 +34,7 @@ layers([
 // maps and lvlConfig imported from maps.js
 let level = addLevel(maps[1], lvlConfig);
 
-let moveSpeed = 600 //increasing move speed for testing, was 200 
+let moveSpeed = 200 //increasing move speed for testing, was 200 
 
 let gameText = add(["gameText"]);
 
@@ -57,7 +74,7 @@ let playerLocX
 onUpdate(()=>{
   playerLocY = player.pos.y
   playerLocX = player.pos.x
-  debug.log(`X: ${playerLocX} Y: ${playerLocY}`)
+  // debug.log(`X: ${playerLocX} Y: ${playerLocY}`)
   //debug.log(player.dir)
 })
 
@@ -93,7 +110,7 @@ const codeBlock = add([
 const line1 = add([
   sprite("declarefunction"),
   scale(3),
-  pos(330,500),
+  pos(183,540),
   area(),
   solid(),
   "declarefunction"
@@ -103,7 +120,7 @@ const line1 = add([
 const line2 = add([
   sprite("line2"),
   scale(3),
-  pos(330,530),
+  pos(442,715),
   area(),
   solid(),
   "line2"
@@ -113,7 +130,7 @@ const line2 = add([
 const line3 = add([
   sprite("line3"),
   scale(3),
-  pos(330,560),
+  pos(423,394),
   area(),
   solid(),
   "line3"
@@ -133,7 +150,7 @@ const line4 = add([
 const line5 = add([
   sprite("line5"),
   scale(3),
-  pos(330,620),
+  pos(115,680),
   area(),
   solid(),
   "line5"
@@ -153,7 +170,7 @@ const trick1 = add([
 const trick2 = add([
   sprite("trick2"),
   scale(3),
-  pos(330,680),
+  pos(115,440),
   area(),
   solid(),
   "trick2"
@@ -212,7 +229,7 @@ let isLine3 = false
 let isLine4 = false
 let isLine5 = false
 let isCodeCorrect = false
-let doorLock = false
+let doorLock = true
 
 //checking collision of code lines with line checks
 onCollide("declarefunction", "line1check", () => {
@@ -296,16 +313,33 @@ onUpdate(()=>{
   pickUpItem(trick2)
 })
 
-// allows the player to put down their item, but only in the code block
+//coords by code block playerLocX >= 64 && playerLocX < 104 && playerLocY >= 93 && playerLocY < 313 
+
+
+// allows the player to put down their item, but only where there is space
 onUpdate(()=>{
-  if(playerLocX >= 64 && playerLocX < 104 && playerLocY >= 93 && playerLocY < 313 && carrying === true){
+  if(carrying === true){
+  if(playerLocX < 360 && playerLocY >365 || playerLocY < 315 ){
     if(isKeyPressed("x")){  
         inventory.item.pos.y = 10 + playerLocY
         inventory.item.pos.x = 50 + playerLocX
         carrying = false
         inventory.item = ""
          }
-}})
+}
+else if(isKeyPressed("x")){
+           gameText = add([
+            "gameText",
+            pos(24, 840),
+            text("No room for code here.", {
+              size: 48,
+              width: 1000,
+              font: "sinko",
+              },
+              ),
+           ])
+           wait(1, () => {destroyAll("gameText")})
+         }}})
 
 // player can access the run button. If code is correct, it unlocks door.
 onUpdate(()=>{
@@ -322,6 +356,18 @@ onUpdate(()=>{
               },
               ),
            ])
+           add([
+          sprite("openDoor"),
+          pos(704, 384),
+          scale(1),
+          layer("game"),
+            ])
+            add([
+          sprite("openDoor"),
+          pos(704, 448),
+          scale(1),
+          layer("game"),
+            ])
            wait(3, () => {destroyAll("gameText")})
          }else if (isKeyPressed("z") && isCodeCorrect === false &&  player.dir === "UP"){
            gameText = add([
@@ -338,8 +384,49 @@ onUpdate(()=>{
          }
 }})
 
+// player can exit the level when the door is unlocked, otherwise gets a message saying the door is locked
+onUpdate(()=>{
+  if(player.dir === "RIGHT" && playerLocX === 657 && (playerLocY > 368 && playerLocY < 480)){
+    if(isKeyPressed("z")){  
+         if(doorLock === true){
+            gameText = add([
+            "gameText",
+            pos(24, 840),
+            text("The door is locked.", {
+              size: 48,
+              width: 1000,
+              font: "sinko",
+              },
+              ),
+           ])
+           wait(2, () => {destroyAll("gameText")})
+         }else{
+           go("gameend")
+         }
+         }
+}})
 
 
+//TEST ONLY - COMMENT OUT
+onUpdate(()=>{
+  isCodeCorrect = true
+})
+
+
+}  // LAST LINE FOR LEVEL 2 FUNCTION
+
+//end of game
+export function gameEnd(){
+
+add([
+    sprite("gameend", ),
+    pos(50, 70),
+    color(255, 255, 255),
+    scale(6)
+  ]);
+
+  keyRelease("enter", () => {
+    go("start");
+  })
 }
-
 

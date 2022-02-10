@@ -2770,8 +2770,8 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       "xyyyyyyyyyyx",
       "xyyyyyyyyyyx",
       "xyyyyyyyyyyx",
-      "xyyyyyyyyyyx",
-      "xyyyyyyyyyyx",
+      "xyyyyyyyyyyd",
+      "xyyyyyyyyyyd",
       "xyyyyyyyyyyx",
       "xyyyyyyyyyyx",
       "xyyyyyyyyyyx",
@@ -2790,6 +2790,18 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   };
 
   // code/level2.js
+  function levelTwoIntro() {
+    add([
+      sprite("leveltwo"),
+      pos(50, 70),
+      color(255, 255, 255),
+      scale(6)
+    ]);
+    keyRelease("enter", () => {
+      go("gametwo");
+    });
+  }
+  __name(levelTwoIntro, "levelTwoIntro");
   function levelTwo() {
     layers([
       "bg",
@@ -2797,7 +2809,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       "ui"
     ], "game");
     let level = addLevel(maps[1], lvlConfig);
-    let moveSpeed = 600;
+    let moveSpeed = 200;
     let gameText = add(["gameText"]);
     const player = add([
       sprite("playerUp"),
@@ -2832,7 +2844,6 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     onUpdate(() => {
       playerLocY = player.pos.y;
       playerLocX = player.pos.x;
-      debug.log(`X: ${playerLocX} Y: ${playerLocY}`);
     });
     const inventorySprite = add([
       sprite("inventory"),
@@ -2859,7 +2870,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     const line1 = add([
       sprite("declarefunction"),
       scale(3),
-      pos(330, 500),
+      pos(183, 540),
       area(),
       solid(),
       "declarefunction"
@@ -2867,7 +2878,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     const line2 = add([
       sprite("line2"),
       scale(3),
-      pos(330, 530),
+      pos(442, 715),
       area(),
       solid(),
       "line2"
@@ -2875,7 +2886,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     const line3 = add([
       sprite("line3"),
       scale(3),
-      pos(330, 560),
+      pos(423, 394),
       area(),
       solid(),
       "line3"
@@ -2891,7 +2902,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     const line5 = add([
       sprite("line5"),
       scale(3),
-      pos(330, 620),
+      pos(115, 680),
       area(),
       solid(),
       "line5"
@@ -2907,7 +2918,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     const trick2 = add([
       sprite("trick2"),
       scale(3),
-      pos(330, 680),
+      pos(115, 440),
       area(),
       solid(),
       "trick2"
@@ -2958,7 +2969,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     let isLine4 = false;
     let isLine5 = false;
     let isCodeCorrect = false;
-    let doorLock = false;
+    let doorLock = true;
     onCollide("declarefunction", "line1check", () => {
       isLine1 = true;
     });
@@ -3021,12 +3032,27 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       pickUpItem(trick2);
     });
     onUpdate(() => {
-      if (playerLocX >= 64 && playerLocX < 104 && playerLocY >= 93 && playerLocY < 313 && carrying === true) {
-        if (isKeyPressed("x")) {
-          inventory.item.pos.y = 10 + playerLocY;
-          inventory.item.pos.x = 50 + playerLocX;
-          carrying = false;
-          inventory.item = "";
+      if (carrying === true) {
+        if (playerLocX < 360 && playerLocY > 365 || playerLocY < 315) {
+          if (isKeyPressed("x")) {
+            inventory.item.pos.y = 10 + playerLocY;
+            inventory.item.pos.x = 50 + playerLocX;
+            carrying = false;
+            inventory.item = "";
+          }
+        } else if (isKeyPressed("x")) {
+          gameText = add([
+            "gameText",
+            pos(24, 840),
+            text("No room for code here.", {
+              size: 48,
+              width: 1e3,
+              font: "sinko"
+            })
+          ]);
+          wait(1, () => {
+            destroyAll("gameText");
+          });
         }
       }
     });
@@ -3042,6 +3068,18 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
               width: 1e3,
               font: "sinko"
             })
+          ]);
+          add([
+            sprite("openDoor"),
+            pos(704, 384),
+            scale(1),
+            layer("game")
+          ]);
+          add([
+            sprite("openDoor"),
+            pos(704, 448),
+            scale(1),
+            layer("game")
           ]);
           wait(3, () => {
             destroyAll("gameText");
@@ -3062,8 +3100,45 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
         }
       }
     });
+    onUpdate(() => {
+      if (player.dir === "RIGHT" && playerLocX === 657 && (playerLocY > 368 && playerLocY < 480)) {
+        if (isKeyPressed("z")) {
+          if (doorLock === true) {
+            gameText = add([
+              "gameText",
+              pos(24, 840),
+              text("The door is locked.", {
+                size: 48,
+                width: 1e3,
+                font: "sinko"
+              })
+            ]);
+            wait(2, () => {
+              destroyAll("gameText");
+            });
+          } else {
+            go("gameend");
+          }
+        }
+      }
+    });
+    onUpdate(() => {
+      isCodeCorrect = true;
+    });
   }
   __name(levelTwo, "levelTwo");
+  function gameEnd() {
+    add([
+      sprite("gameend"),
+      pos(50, 70),
+      color(255, 255, 255),
+      scale(6)
+    ]);
+    keyRelease("enter", () => {
+      go("start");
+    });
+  }
+  __name(gameEnd, "gameEnd");
 
   // code/main.js
   var mapWidth = 1e3;
@@ -3072,7 +3147,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     background: [0, 0, 0],
     width: mapWidth,
     height: mapLength,
-    scale: 0.5
+    scale: 1
   });
   loadPedit("wall", "sprites/wall.pedit");
   loadPedit("floor", "sprites/floor.pedit");
@@ -3109,10 +3184,12 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   loadPedit("line1check", "sprites/line1check.pedit");
   loadSprite("inventory", "sprites/inventory.png");
   loadSprite("run", "sprites/run.png");
+  loadSprite("leveltwo", "sprites/leveltwo.png");
+  loadSprite("gameend", "sprites/gameend.png");
   scene("start", () => {
     onUpdate(() => {
       if (isKeyPressed("p")) {
-        go("gametwo");
+        go("leveltwobrief");
       }
     });
     add([
@@ -3146,6 +3223,12 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     let level = addLevel(maps[0], lvlConfig);
     let moveSpeed = 200;
     let gameText = add(["gameText"]);
+    const inventorySprite = add([
+      sprite("inventory"),
+      scale(2),
+      pos(290, 920),
+      "inventory"
+    ]);
     const player = add([
       sprite("playerRight"),
       scale(1),
@@ -3294,7 +3377,6 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     });
     let consoleOn = false;
     onUpdate(() => {
-      debug.log(`${player.pos.x} + ${player.pos.y}`);
       if (playerLocY === 489 && (playerLocX > 310 && playerLocX < 365)) {
         if (isKeyPressed("z")) {
           screenPop();
@@ -3421,12 +3503,14 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
               destroyAll("gameText");
             });
           } else {
-            go("gametwo");
+            go("leveltwobrief");
           }
         }
       }
     });
   });
+  scene("leveltwobrief", levelTwoIntro);
   scene("gametwo", levelTwo);
+  scene("gameend", gameEnd);
 })();
 //# sourceMappingURL=game.js.map

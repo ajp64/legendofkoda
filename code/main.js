@@ -2,6 +2,8 @@
 import kaboom from "kaboom"
 import {maps, lvlConfig} from "./maps.js"
 import {levelTwo} from "./level2.js"
+import {levelTwoIntro} from "./level2.js"
+import {gameEnd} from "./level2.js"
 
 const mapWidth = 1000;
 const mapLength  = 1000;
@@ -11,7 +13,7 @@ kaboom({
     background: [0, 0, 0],
     width: mapWidth,
     height: mapLength,
-    scale: .5
+    scale: 1
 });
 
 loadPedit("wall", "sprites/wall.pedit");
@@ -49,13 +51,15 @@ loadSprite("trick2", "sprites/trick2.png");
 loadPedit("line1check", "sprites/line1check.pedit");
 loadSprite("inventory", "sprites/inventory.png");
 loadSprite("run", "sprites/run.png");
+loadSprite("leveltwo", "sprites/leveltwo.png");
+loadSprite("gameend", "sprites/gameend.png");
 
 // intro scene to game
 scene("start", () => {
 
 // skip to level 2 during devp
   onUpdate(()=>{
-  if(isKeyPressed("p")){go("gametwo")}
+  if(isKeyPressed("p")){go("leveltwobrief")}
 })
 
   add([
@@ -104,6 +108,13 @@ let moveSpeed = 200
 
 let gameText = add(["gameText"]);
 
+//inventory sprite
+const inventorySprite = add([
+  sprite("inventory"),
+  scale(2),
+  pos(290,920),
+  "inventory"
+]); 
 
 const player = add([
   sprite("playerRight"),
@@ -270,7 +281,7 @@ let consoleOn = false
 
 // player can access the console from certain coords. Z uses the console, x returns them to the game. 
 onUpdate(()=>{
-  debug.log(`${player.pos.x} + ${player.pos.y}`)
+  // debug.log(`${player.pos.x} + ${player.pos.y}`)
   if(playerLocY === 489 && (playerLocX > 310 && playerLocX < 365)){
     if(isKeyPressed("z")){  
          screenPop();
@@ -398,7 +409,7 @@ onUpdate(()=>{
            ])
            wait(3, () => {destroyAll("gameText")})
          }else{
-           go("gametwo")
+           go("leveltwobrief")
          }
          }
 }})
@@ -406,5 +417,12 @@ onUpdate(()=>{
 
 });// end of level one game scene
 
+// scene for level two brief
+scene("leveltwobrief", levelTwoIntro)
+
+// scene for level two
 scene("gametwo", levelTwo)
+
+//scene for end of game
+scene("gameend", gameEnd)
 
