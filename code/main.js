@@ -1,4 +1,3 @@
-
 import kaboom from "kaboom"
 import {maps, lvlConfig} from "./maps.js"
 import {levelTwo} from "./level2.js"
