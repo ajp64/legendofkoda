@@ -407,10 +407,10 @@ onUpdate(()=>{
 }})
 
 
-//TEST ONLY - COMMENT OUT
-onUpdate(()=>{
-  isCodeCorrect = true
-})
+// //TEST ONLY - COMMENT OUT
+// onUpdate(()=>{
+//   isCodeCorrect = true
+// })
 
 
 }  // LAST LINE FOR LEVEL 2 FUNCTION
