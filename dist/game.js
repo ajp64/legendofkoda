@@ -3144,7 +3144,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     background: [0, 0, 0],
     width: mapWidth,
     height: mapLength,
-    scale: 1
+    scale: 0.75
   });
   loadPedit("wall", "sprites/wall.pedit");
   loadPedit("floor", "sprites/floor.pedit");

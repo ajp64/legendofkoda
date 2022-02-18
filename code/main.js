@@ -12,7 +12,7 @@ kaboom({
     background: [0, 0, 0],
     width: mapWidth,
     height: mapLength,
-    scale: 1
+    scale: 0.75
 });
 
 loadPedit("wall", "sprites/wall.pedit");
