@@ -18,7 +18,7 @@ The goal I am aiming for is 3 seperate levels, that can be accessed subsequently
 
 I've maintained a [DevLog](https://github.com/ajp64/gametest/blob/main/devlog.md) in this repo for notes and relflections on how the game has turned out.
 
-## Replit
+## Play the game!
 
-Check out the Replit [here](https://legendofkoda.ajp64.repl.co/)
+Check out the game [here!](https://legendofkoda.ajp64.repl.co/)
 
