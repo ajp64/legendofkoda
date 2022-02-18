@@ -20,5 +20,5 @@ I've maintained a [DevLog](https://github.com/ajp64/gametest/blob/main/devlog.md
 
 ## Replit
 
-Check out the Replit [here](https://replit.com/@ajp64/LegendOfKoda) (Note: Needs to be running from the host in order for others to play it.)
+Check out the Replit [here](https://legendofkoda.ajp64.repl.co/)
 
